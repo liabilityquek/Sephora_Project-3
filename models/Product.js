@@ -10,5 +10,5 @@ const ProductSchema = new Schema({
   category: { type: String, required: true },
 });
 
-const Appointment = mongoose.model("Product", ProductSchema);
-module.exports = Appointment;
+const Product = mongoose.model("Product", ProductSchema);
+module.exports = Product;
