@@ -66,9 +66,9 @@ export default function () {
       ? productsData.filter((productData) => {
           const productDetail = productData.productDetails;
           return (
-            productDetail._id.toLowerCase().trim() === keyword ||
-            productDetail.brand.toLowerCase().trim() === keyword ||
-            productDetail.name.toLowerCase().trim() === keyword
+            productDetail._id.toLowerCase().trim().includes(keyword) ||
+            productDetail.brand.toLowerCase().trim().includes(keyword) ||
+            productDetail.name.toLowerCase().trim().includes(keyword)
           );
         })
       : productsData;
