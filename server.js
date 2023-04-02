@@ -5,7 +5,6 @@ require("dotenv").config();
 require("./config/database");
 // const jwt = require("jsonwebtoken");
 
-
 // const userRouter = require("./routes/usersRouter");
 
 const app = express();
