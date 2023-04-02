@@ -23,6 +23,7 @@ function App() {
   return (
     <main className="App">
       <NavBar />
+      <Home />
       <Routes>
         <Route path="/booking" element={<AppointmentPage />} />
         <Route path="/" element={<ProductsPage products={products} />} />
@@ -33,7 +34,6 @@ function App() {
 
         <Route path="/adminlocation" element={<InventoryManagement />} />
       </Routes>
-      <Home />
     </main>
   );
 }
