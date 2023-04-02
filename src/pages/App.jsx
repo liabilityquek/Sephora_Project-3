@@ -13,7 +13,7 @@ function App() {
   const [products, setProducts] = useState([]);
 
     useEffect(() => {
-    fetch("/api/product")
+    fetch("/api")
       .then((response) => response.json())
       .then((data) => setProducts(data))
       .catch((error) => console.error(error));
