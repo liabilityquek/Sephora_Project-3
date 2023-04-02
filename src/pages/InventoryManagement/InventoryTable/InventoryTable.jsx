@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
-import mockLocationsData from "./mockLocationsData.json";
 import "./InventoryTable.css";
+import EditQuantityModal from "./EditQuantityModal/EditQuantityModal";
+import { $mockLocationsData } from "./mockLocationsData";
 
 export default function () {
   const [locationsData, setLocationsData] = useState([
@@ -25,31 +26,46 @@ export default function () {
     searchProductKeyword: "",
   });
 
-  const [productsData, setProductsData] = useState([
-    {
-      productDetails: {
-        _id: "",
-        name: "",
-        brand: "",
+  const [selectedLocationData, setSelectedLocationData] = useState({
+    name: "",
+    products: [
+      {
+        productDetails: {
+          _id: "",
+          name: "",
+          brand: "",
+        },
+        productQty: 0,
       },
-      productQty: 0,
-    },
-  ]);
+    ],
+  });
 
   const initalizeLocationsData = async () => {
-    setLocationsData(mockLocationsData);
+    setLocationsData($mockLocationsData);
+
+    // If location was selected
+    if (locationName) {
+      initalizeSelectedLocationsData(locationName, $mockLocationsData);
+    }
   };
 
   const handleLocationChange = (e) => {
-    const locationName = e.target.value;
+    const name = e.target.value;
+    setLocationName(name);
+    initalizeSelectedLocationsData(name, $mockLocationsData);
+  };
+
+  const initalizeSelectedLocationsData = (
+    selectedLocationName,
+    locationsData
+  ) => {
     const selectedLocationData =
       locationsData[
         locationsData.findIndex(
-          (locationData) => locationData.name === locationName
+          (locationData) => locationData.name === selectedLocationName
         )
       ];
-    setLocationName(locationName);
-    setProductsData(selectedLocationData.products);
+    setSelectedLocationData(selectedLocationData);
   };
 
   const renderLocationsOption = () => {
@@ -62,6 +78,7 @@ export default function () {
 
   const renderTableContent = () => {
     const keyword = conditions.searchProductKeyword.toLowerCase().trim();
+    const productsData = selectedLocationData.products;
     const filteredData = keyword
       ? productsData.filter((productData) => {
           const productDetail = productData.productDetails;
@@ -74,18 +91,55 @@ export default function () {
       : productsData;
     return (
       <tbody>
-        {filteredData.map((product) => (
-          <tr key={product.productDetails._id}>
-            <td>{product.productDetails.name}</td>
-            <td>{product.productDetails._id}</td>
-            <td></td>
-            <td>{product.productQty}</td>
-            <td>
-              <button className="btn btn-primary me-3">Edit</button>
-              <button className="btn btn-danger">Delete</button>
-            </td>
-          </tr>
-        ))}
+        {filteredData.map((product) => {
+          const productQty = product.productQty;
+          return (
+            <tr key={product.productDetails._id}>
+              <td>{product.productDetails.name}</td>
+              <td>{product.productDetails._id}</td>
+              <td></td>
+              <td>{productQty}</td>
+              <td className="actionsTableData">
+                <EditQuantityModal
+                  productQty={productQty}
+                  onSubmitSuccess={(newProductyQty) => {
+                    const modifiedProduct = {
+                      ...product,
+                      productQty: newProductyQty,
+                    };
+                    const modifiedProducts = selectedLocationData.products.map(
+                      (selectedProduct) => {
+                        const isModifiedProduct =
+                          selectedProduct.productDetails._id ===
+                          modifiedProduct.productDetails._id;
+                        return isModifiedProduct
+                          ? modifiedProduct
+                          : selectedProduct;
+                      }
+                    );
+
+                    // Add your update API here
+                    const newSelectedLocationData = {
+                      ...selectedLocationData,
+                      products: modifiedProducts,
+                    };
+                    // Update mock data
+                    $mockLocationsData[
+                      $mockLocationsData.findIndex(
+                        (locationData) =>
+                          locationData.name === newSelectedLocationData.name
+                      )
+                    ] = newSelectedLocationData;
+
+                    // When submit successful
+                    initalizeLocationsData();
+                  }}
+                ></EditQuantityModal>
+                <button className="btn btn-danger">Delete</button>
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     );
   };
@@ -108,7 +162,7 @@ export default function () {
       {locationsData && locationsData.length ? (
         <div className="content">
           <div className="filterHeader">
-            <div className="rowHeader">
+            <div className="rowHeader w-100">
               <div className="input-group input-group-sm">
                 <span
                   className="input-group-text"
@@ -134,7 +188,7 @@ export default function () {
             {locationName ? (
               <div className="w-100">
                 <div className="rowHeader">
-                  <div className="input-group input-group-sm wd-300">
+                  <div className="wd-300 input-group input-group-sm">
                     <span
                       className="input-group-text"
                       id="inputGroup-sizing-default"

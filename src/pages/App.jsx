@@ -3,8 +3,10 @@ import Home from "../components/Home";
 import { Routes, Route } from "react-router";
 import NavBar from "../components/NavBar";
 import AppointmentPage from "./Appoinments/AppointmentPage";
-import "bootstrap/dist/css/bootstrap.min.css";
 import InventoryManagement from "./InventoryManagement/InventoryManagement";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "@popperjs/core/dist/umd/popper.min.js";
 
 function App() {
   return (
