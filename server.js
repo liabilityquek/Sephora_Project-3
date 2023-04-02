@@ -7,6 +7,8 @@ require("./config/database");
 
 // const userRouter = require("./routes/usersRouter");
 
+const locationRouter = require("./routes/locations");
+
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -18,6 +20,8 @@ app.use(express.static(path.join(__dirname, "dist")));
 app.get("/api", (req, res) => {
   res.json({ msg: "Hi" });
 });
+
+app.use("/api/location", locationRouter);
 
 // log in for future admin roles!
 
