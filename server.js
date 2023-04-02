@@ -5,8 +5,8 @@ require("dotenv").config();
 require("./config/database");
 // const jwt = require("jsonwebtoken");
 
-
-// const userRouter = require("./routes/usersRouter");
+const productRouter = require("./routes/product");
+const locationRouter = require("./routes/location");
 
 const app = express();
 const port = process.env.PORT || 3000;
@@ -16,9 +16,8 @@ app.use(logger("dev"));
 app.use(express.json());
 app.use(express.static(path.join(__dirname, "dist")));
 
-app.get("/api", (req, res) => {
-  res.json({ msg: "Hi" });
-});
+app.use("/api", productRouter);
+app.use("/api/location", locationRouter);
 
 // log in for future admin roles!
 
