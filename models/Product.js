@@ -7,7 +7,12 @@ const ProductSchema = new Schema(
     imgurl: { type: String, required: true },
     price: { type: Number, required: true, min: 1 },
     description: { type: String, required: true },
-    brand: { type: String, required: true },
+    brand: {
+      type: String,
+      required: true,
+      unique: true,
+      collation: { locale: "en_US", strength: 2 },
+    },
     category: { type: String, required: true },
   },
   {
