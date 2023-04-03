@@ -1,8 +1,8 @@
 {
   "compilerOptions": {
+    "lib": ["DOM"],
     "baseUrl": ".",
     "checkJs": true,
     "jsx": "preserve",
-    "resolveJsonModule": true
   }
 }
