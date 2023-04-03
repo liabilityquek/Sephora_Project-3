@@ -17,11 +17,9 @@ export default function ({ productQty, onSubmitSuccess }) {
     }));
   };
 
-  const handleEditQuantitySubmit = () => {
-    setTimeout(() => {
-      alert(`Product quantity ${formValues.productQty} updated`);
-      onSubmitSuccess(formValues.productQty);
-    }, 1000);
+  const handleEditQuantitySubmit = (e) => {
+    e.preventDefault();
+    onSubmitSuccess(formValues.productQty);
     setShow(false);
   };
 
@@ -57,7 +55,7 @@ export default function ({ productQty, onSubmitSuccess }) {
               </button>
             </div>
             <div className="modal-body">
-              <form>
+              <form onSubmit={handleEditQuantitySubmit}>
                 <div className="input-group mb-3">
                   <span
                     className="input-group-text"

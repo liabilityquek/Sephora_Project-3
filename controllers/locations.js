@@ -44,6 +44,7 @@ const deleteLocProduct = async (req, res) => {
 
 const editLocProductQty = async (req, res) => {
   try {
+    console.log("edit location quantity");
     const locationId = req.params.locationId; // get the location id from the request parameters
     const productId = req.params.productId; // get the product id from the request parameters
     const newQty = req.body.qty; // get the new quantity from the request body

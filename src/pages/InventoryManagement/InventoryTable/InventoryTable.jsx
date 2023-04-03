@@ -73,31 +73,16 @@ export default function () {
                 <EditQuantityModal
                   productQty={productQty}
                   onSubmitSuccess={async (newProductQty) => {
-                    const modifiedProduct = {
-                      ...product,
-                      productQty: newProductQty,
-                    };
-                    const modifiedProducts = selectedLocationData.products.map(
-                      (selectedProduct) => {
-                        const isModifiedProduct =
-                          selectedProduct.productDetails._id ===
-                          modifiedProduct.productDetails._id;
-                        return isModifiedProduct
-                          ? modifiedProduct
-                          : selectedProduct;
-                      }
-                    );
-
-                    // Add your update API here
+                    debugger;
                     const response = await fetch(
-                      `/api/locations/${selectedLocationData._id}`,
+                      `/api/locations/${selectedLocationData._id}/products/${productDetails._id}`,
                       {
                         method: "PUT",
                         headers: {
                           "Content-Type": "application/json",
                         },
                         body: JSON.stringify({
-                          products: modifiedProducts,
+                          qty: newProductQty,
                         }),
                       }
                     );
