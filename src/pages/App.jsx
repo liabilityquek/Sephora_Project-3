@@ -9,7 +9,7 @@ import { useEffect, useState } from "react";
 import SelectedProductPage from "./Products/SelectedProductPage";
 import "bootstrap/dist/css/bootstrap.min.css";
 import InventoryManagement from "./InventoryManagement/InventoryManagement";
-import AddProducts from "./ProductsForm/AddProducts";
+import AddProducts from "./ProductsForm/ProductsForm";
 import AddProductsForm from "./ProductsForm/AddProductsForm";
 
 function App() {
