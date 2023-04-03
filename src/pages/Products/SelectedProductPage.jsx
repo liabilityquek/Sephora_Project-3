@@ -6,7 +6,7 @@ export default function SelectedProductPage({products}) {
     const product = products.filter(p => p.name === productName)
 
     useEffect(() => {
-  fetch(`/api/location/${productName}`)
+  fetch(`/api/locations/${productName}`)
     .then((response) => response.json())
     .then((data) => setLocationProduct(data))
     .catch((error) => console.error(error));

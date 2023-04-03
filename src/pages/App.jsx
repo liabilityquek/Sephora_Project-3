@@ -9,6 +9,8 @@ import { useEffect, useState } from "react";
 import SelectedProductPage from "./Products/SelectedProductPage";
 import "bootstrap/dist/css/bootstrap.min.css";
 import InventoryManagement from "./InventoryManagement/InventoryManagement";
+import AddProducts from "./ProductsForm/AddProducts";
+import AddProductsForm from "./ProductsForm/AddProductsForm";
 
 function App() {
   const [products, setProducts] = useState([]);
@@ -28,10 +30,10 @@ function App() {
         <Route path="/booking" element={<AppointmentPage />} />
         <Route path="/" element={<ProductsPage products={products} />} />
         <Route
-          path="/product/:productName"
-          element={<SelectedProductPage products={products} />}
-        />
-
+          path="/products/:productName"
+          element={<SelectedProductPage products={products} />}/>
+        <Route path="/productpage" element={<AddProducts products={products} />} />
+        <Route path="/productpage/new" element={<AddProductsForm/>} />
         <Route path="/adminlocation" element={<InventoryManagement />} />
       </Routes>
     </main>

@@ -17,7 +17,7 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "dist")));
 
 app.use("/api", productRouter);
-app.use("/api/location", locationRouter);
+app.use("/api/locations", locationRouter);
 
 // log in for future admin roles!
 

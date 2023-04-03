@@ -29,7 +29,7 @@ export default function ProductsPage({products}) {
       <div className="productsDiv">
         {sortedProducts.map((p) => (
           <div key={p._id}>
-            <Link to={`/product/${p.name}`}>
+            <Link to={`/products/${p.name}`}>
               <img className="productsPic" src={p.imgurl} alt={p.name} />
               <br></br>
               <label>{p.brand}</label>
