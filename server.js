@@ -21,7 +21,7 @@ app.get("/api", (req, res) => {
   res.json({ msg: "Hi" });
 });
 
-app.use("/api/location", locationRouter);
+app.use("/api/locations", locationRouter);
 
 // log in for future admin roles!
 

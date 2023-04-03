@@ -4,8 +4,11 @@ const locationsCtrl = require("../controllers/locations");
 
 router.get("/", locationsCtrl.showLocation);
 router.delete(
-  "/locations/:locationId/products/:productId",
+  "/:locationId/products/:productId",
   locationsCtrl.deleteLocProduct
 );
+router.put("/:locationId/products/:productId", locationsCtrl.editLocProductQty);
+router.get("/:locationId", locationsCtrl.showAddProduct);
+router.post("/:locationId/", locationsCtrl.addLocProduct);
 
 module.exports = router;
