@@ -51,13 +51,11 @@ const showLocation = async (req, res) => {
 
 const deleteLocProduct = async (req, res) => {
   try {
-    const locationId = req.params.locationId; // get the location id from the request parameters
-    const productId = req.params.productId; // get the product id from the request parameters
+    const locationId = req.params.locationId;
+    const productId = req.params.productId;
 
-    // Find the location by its id
     const location = await Location.findById(locationId);
 
-    // Find the index of the product in the product array
     const productIndex = location.products.findIndex(
       (p) => p.productDetails.toString() === productId
     );
@@ -69,10 +67,8 @@ const deleteLocProduct = async (req, res) => {
       return res.status(404).json({ error: "Product not found in location" });
     }
 
-    // Save the updated location
     const updatedLocation = await location.save();
 
-    // Return the updated location
     res.status(200).json(updatedLocation);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -82,14 +78,12 @@ const deleteLocProduct = async (req, res) => {
 const editLocProductQty = async (req, res) => {
   try {
     console.log("edit location quantity");
-    const locationId = req.params.locationId; // get the location id from the request parameters
-    const productId = req.params.productId; // get the product id from the request parameters
-    const newQty = req.body.qty; // get the new quantity from the request body
+    const locationId = req.params.locationId; // get location id
+    const productId = req.params.productId; // get the product id
+    const newQty = req.body.qty; // get the new quantity
 
-    // Find the location by its id
     const location = await Location.findById(locationId);
 
-    // Find the product in the product array
     const product = location.products.find(
       (p) => p.productDetails.toString() === productId
     );
@@ -101,10 +95,8 @@ const editLocProductQty = async (req, res) => {
       return res.status(404).json({ error: "Product not found in location" });
     }
 
-    // Save the updated location
     const updatedLocation = await location.save();
 
-    // Return the updated location
     res.status(200).json(updatedLocation);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -115,12 +107,11 @@ const showAddProduct = async (req, res) => {
   try {
     const locationId = req.params.locationId;
 
-    // Find the location by its id
     const location = await Location.findById(locationId).populate(
       "products.productDetails"
     );
 
-    // Find all products that are not yet in the location
+    // Find all products not in location
     const allProducts = await Product.find({});
     const existingProducts = location.products.map((p) =>
       p.productDetails._id.toString()
@@ -129,7 +120,6 @@ const showAddProduct = async (req, res) => {
       (p) => !existingProducts.includes(p._id.toString())
     );
 
-    // Return the location and list of new products
     res.status(200).json({ location, newProducts });
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -138,20 +128,17 @@ const showAddProduct = async (req, res) => {
 
 const addLocProduct = async (req, res) => {
   try {
-    const locationId = req.params.locationId; // get the location id from the request parameters
-    const { productId, qty } = req.body; // get the product id and quantity from the request body
+    const locationId = req.params.locationId;
+    const { productId, qty } = req.body;
 
-    // Find the location by its id
     const location = await Location.findById(locationId);
 
     // Add the new product to the location
     const newProduct = { productDetails: productId, productQty: qty };
     location.products.push(newProduct);
 
-    // Save the updated location
     const updatedLocation = await location.save();
 
-    // Return the updated location
     res.status(200).json(updatedLocation);
   } catch (error) {
     res.status(400).json({ error: error.message });
