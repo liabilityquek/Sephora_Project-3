@@ -5,8 +5,8 @@ require("dotenv").config();
 require("./config/database");
 // const jwt = require("jsonwebtoken");
 
-const productRouter = require("./routes/product");
-const locationRouter = require("./routes/location");
+const productRouter = require("./routes/products");
+const locationRouter = require("./routes/locations");
 
 const app = express();
 const port = process.env.PORT || 3000;

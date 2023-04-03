@@ -1,5 +1,5 @@
 const Location = require("../models/Location");
-const Product = require("../models/Products");
+const Product = require("../models/Product");
 
 const findLocationByProductName = async (req, res) => {
   try {
