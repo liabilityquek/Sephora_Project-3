@@ -1,71 +1,38 @@
 import React, { useEffect, useState } from "react";
 import "./InventoryTable.css";
 import EditQuantityModal from "./EditQuantityModal/EditQuantityModal";
-import { $mockLocationsData } from "./mockLocationsData";
 
 export default function () {
-  const [locationsData, setLocationsData] = useState([
-    {
-      name: "",
-      products: [
-        {
-          productDetails: {
-            _id: "",
-            name: "",
-            brand: "",
-          },
-          productQty: 0,
-        },
-      ],
-    },
-  ]);
-
+  const [locationsData, setLocationsData] = useState([]);
   const [locationName, setLocationName] = useState("");
-
   const [conditions, setConditions] = useState({
     searchProductKeyword: "",
   });
-
-  const [selectedLocationData, setSelectedLocationData] = useState({
-    name: "",
-    products: [
-      {
-        productDetails: {
-          _id: "",
-          name: "",
-          brand: "",
-        },
-        productQty: 0,
-      },
-    ],
-  });
+  const [selectedLocationData, setSelectedLocationData] = useState(null);
 
   const initalizeLocationsData = async () => {
-    setLocationsData($mockLocationsData);
-
-    // If location was selected
-    if (locationName) {
-      initalizeSelectedLocationsData(locationName, $mockLocationsData);
+    try {
+      const response = await fetch("/api/locations");
+      const data = await response.json();
+      setLocationsData(data);
+      if (locationName) {
+        const selectedLocation = data.find(
+          (locationData) => locationData.name === locationName
+        );
+        setSelectedLocationData(selectedLocation);
+      }
+    } catch (error) {
+      console.log(error);
     }
   };
 
   const handleLocationChange = (e) => {
     const name = e.target.value;
     setLocationName(name);
-    initalizeSelectedLocationsData(name, $mockLocationsData);
-  };
-
-  const initalizeSelectedLocationsData = (
-    selectedLocationName,
-    locationsData
-  ) => {
-    const selectedLocationData =
-      locationsData[
-        locationsData.findIndex(
-          (locationData) => locationData.name === selectedLocationName
-        )
-      ];
-    setSelectedLocationData(selectedLocationData);
+    const selectedLocation = locationsData.find(
+      (locationData) => locationData.name === name
+    );
+    setSelectedLocationData(selectedLocation);
   };
 
   const renderLocationsOption = () => {
@@ -77,6 +44,8 @@ export default function () {
   };
 
   const renderTableContent = () => {
+    if (!selectedLocationData) return null;
+
     const keyword = conditions.searchProductKeyword.toLowerCase().trim();
     const productsData = selectedLocationData.products;
     const filteredData = keyword
@@ -93,19 +62,20 @@ export default function () {
       <tbody>
         {filteredData.map((product) => {
           const productQty = product.productQty;
+          const productDetails = product.productDetails;
           return (
-            <tr key={product.productDetails._id}>
-              <td>{product.productDetails.name}</td>
-              <td>{product.productDetails._id}</td>
-              <td></td>
+            <tr key={productDetails._id}>
+              <td>{productDetails.name}</td>
+              <td>{productDetails._id}</td>
+              <td>{productDetails.brand}</td>
               <td>{productQty}</td>
               <td className="actionsTableData">
                 <EditQuantityModal
                   productQty={productQty}
-                  onSubmitSuccess={(newProductyQty) => {
+                  onSubmitSuccess={async (newProductQty) => {
                     const modifiedProduct = {
                       ...product,
-                      productQty: newProductyQty,
+                      productQty: newProductQty,
                     };
                     const modifiedProducts = selectedLocationData.products.map(
                       (selectedProduct) => {
@@ -119,17 +89,18 @@ export default function () {
                     );
 
                     // Add your update API here
-                    const newSelectedLocationData = {
-                      ...selectedLocationData,
-                      products: modifiedProducts,
-                    };
-                    // Update mock data
-                    $mockLocationsData[
-                      $mockLocationsData.findIndex(
-                        (locationData) =>
-                          locationData.name === newSelectedLocationData.name
-                      )
-                    ] = newSelectedLocationData;
+                    const response = await fetch(
+                      `/api/locations/${selectedLocationData._id}`,
+                      {
+                        method: "PUT",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          products: modifiedProducts,
+                        }),
+                      }
+                    );
 
                     // When submit successful
                     initalizeLocationsData();

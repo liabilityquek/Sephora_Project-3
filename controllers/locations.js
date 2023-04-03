@@ -3,7 +3,9 @@ const Product = require("../models/Product");
 
 const showLocation = async (req, res) => {
   try {
-    const locations = await Location.find({});
+    const locations = await Location.find({}).populate(
+      "products.productDetails"
+    );
     res.status(200).json(locations);
   } catch (error) {
     res.status(400).json({ error: error.message });
