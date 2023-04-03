@@ -30,7 +30,9 @@ export default function AddProducts({products}) {
               <td>{p.brand}</td>
               <td>{p.imgurl}</td>
               <td><button>Delete</button></td>
-              <td><button>Edit</button></td>
+              <td><Link to={`/productpage/products/${p._id}/edit`}>
+                  <button>Edit</button>
+                </Link></td>
             </tr>
           ))}
         </tbody>
