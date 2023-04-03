@@ -1,6 +1,4 @@
 import React from "react";
-import { Routes, Route } from "react-router";
-import { useEffect, useState } from "react";
 import "../index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
@@ -13,6 +11,8 @@ import SelectedProductPage from "./Products/SelectedProductPage";
 import AddProducts from "./ProductsForm/ProductsForm";
 import AddProductsForm from "./ProductsForm/AddProductsForm";
 import InventoryManagement from "./InventoryManagement/InventoryManagement";
+import { Routes, Route } from "react-router";
+import { useEffect, useState } from "react";
 
 function App() {
   const [products, setProducts] = useState([]);
