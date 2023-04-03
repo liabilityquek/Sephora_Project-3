@@ -41,9 +41,14 @@
   margin-bottom: 20px;
   justify-content: space-between;
   height: 40px;
-  width: 100%;
 }
 
+div .wd-300,
+button .wd-300,
 .wd-300 {
   width: 300px;
+}
+
+.actionsTableData {
+  display: flex;
 }

@@ -1,55 +1,38 @@
 import React, { useEffect, useState } from "react";
-import mockLocationsData from "./mockLocationsData.json";
 import "./InventoryTable.css";
+import EditQuantityModal from "./EditQuantityModal/EditQuantityModal";
 
 export default function () {
-  const [locationsData, setLocationsData] = useState([
-    {
-      name: "",
-      products: [
-        {
-          productDetails: {
-            _id: "",
-            name: "",
-            brand: "",
-          },
-          productQty: 0,
-        },
-      ],
-    },
-  ]);
-
+  const [locationsData, setLocationsData] = useState([]);
   const [locationName, setLocationName] = useState("");
-
   const [conditions, setConditions] = useState({
     searchProductKeyword: "",
   });
-
-  const [productsData, setProductsData] = useState([
-    {
-      productDetails: {
-        _id: "",
-        name: "",
-        brand: "",
-      },
-      productQty: 0,
-    },
-  ]);
+  const [selectedLocationData, setSelectedLocationData] = useState(null);
 
   const initalizeLocationsData = async () => {
-    setLocationsData(mockLocationsData);
+    try {
+      const response = await fetch("/api/locations");
+      const data = await response.json();
+      setLocationsData(data);
+      if (locationName) {
+        const selectedLocation = data.find(
+          (locationData) => locationData.name === locationName
+        );
+        setSelectedLocationData(selectedLocation);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handleLocationChange = (e) => {
-    const locationName = e.target.value;
-    const selectedLocationData =
-      locationsData[
-        locationsData.findIndex(
-          (locationData) => locationData.name === locationName
-        )
-      ];
-    setLocationName(locationName);
-    setProductsData(selectedLocationData.products);
+    const name = e.target.value;
+    setLocationName(name);
+    const selectedLocation = locationsData.find(
+      (locationData) => locationData.name === name
+    );
+    setSelectedLocationData(selectedLocation);
   };
 
   const renderLocationsOption = () => {
@@ -61,7 +44,10 @@ export default function () {
   };
 
   const renderTableContent = () => {
+    if (!selectedLocationData) return null;
+
     const keyword = conditions.searchProductKeyword.toLowerCase().trim();
+    const productsData = selectedLocationData.products;
     const filteredData = keyword
       ? productsData.filter((productData) => {
           const productDetail = productData.productDetails;
@@ -74,18 +60,42 @@ export default function () {
       : productsData;
     return (
       <tbody>
-        {filteredData.map((product) => (
-          <tr key={product.productDetails._id}>
-            <td>{product.productDetails.name}</td>
-            <td>{product.productDetails._id}</td>
-            <td></td>
-            <td>{product.productQty}</td>
-            <td>
-              <button className="btn btn-primary me-3">Edit</button>
-              <button className="btn btn-danger">Delete</button>
-            </td>
-          </tr>
-        ))}
+        {filteredData.map((product) => {
+          const productQty = product.productQty;
+          const productDetails = product.productDetails;
+          return (
+            <tr key={productDetails._id}>
+              <td>{productDetails.name}</td>
+              <td>{productDetails._id}</td>
+              <td>{productDetails.brand}</td>
+              <td>{productQty}</td>
+              <td className="actionsTableData">
+                <EditQuantityModal
+                  productQty={productQty}
+                  onSubmitSuccess={async (newProductQty) => {
+                    debugger;
+                    const response = await fetch(
+                      `/api/locations/${selectedLocationData._id}/products/${productDetails._id}`,
+                      {
+                        method: "PUT",
+                        headers: {
+                          "Content-Type": "application/json",
+                        },
+                        body: JSON.stringify({
+                          qty: newProductQty,
+                        }),
+                      }
+                    );
+
+                    // When submit successful
+                    initalizeLocationsData();
+                  }}
+                ></EditQuantityModal>
+                <button className="btn btn-danger">Delete</button>
+              </td>
+            </tr>
+          );
+        })}
       </tbody>
     );
   };
@@ -108,7 +118,7 @@ export default function () {
       {locationsData && locationsData.length ? (
         <div className="content">
           <div className="filterHeader">
-            <div className="rowHeader">
+            <div className="rowHeader w-100">
               <div className="input-group input-group-sm">
                 <span
                   className="input-group-text"
@@ -134,7 +144,7 @@ export default function () {
             {locationName ? (
               <div className="w-100">
                 <div className="rowHeader">
-                  <div className="input-group input-group-sm wd-300">
+                  <div className="wd-300 input-group input-group-sm">
                     <span
                       className="input-group-text"
                       id="inputGroup-sizing-default"
