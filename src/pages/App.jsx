@@ -11,6 +11,7 @@ import SelectedProductPage from "./Products/SelectedProductPage";
 import AddProducts from "./ProductsForm/ProductsForm";
 import AddProductsForm from "./ProductsForm/AddProductsForm";
 import InventoryManagement from "./InventoryManagement/InventoryManagement";
+import InventoryAdd from "./InventoryAdd/InventoryAdd";
 import { Routes, Route } from "react-router";
 import { useEffect, useState } from "react";
 
@@ -41,6 +42,7 @@ function App() {
         />
         <Route path="/productpage/new" element={<AddProductsForm />} />
         <Route path="/adminlocation" element={<InventoryManagement />} />
+        <Route path="/adminlocation/edit" element={<InventoryAdd />} />
       </Routes>
     </main>
   );

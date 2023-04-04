@@ -29,7 +29,7 @@ export default function ({ productQty, onSubmitSuccess }) {
   return (
     <div>
       <button className="btn btn-secondary me-3" onClick={() => setShow(true)}>
-        Edit Quantity
+        EDIT QUANTITY
       </button>
       <div
         className="modal"
