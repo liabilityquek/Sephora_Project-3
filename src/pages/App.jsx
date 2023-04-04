@@ -22,6 +22,14 @@ function App() {
 
   const addProduct = (product) => setProducts(products.concat(product));
 
+  const handleEditProduct = (editedProduct) => {
+  setProducts((prevProducts) =>
+    prevProducts.map((product) =>
+      product._id === editedProduct._id ? editedProduct : product
+    )
+  );
+};
+
   useEffect(() => {
     fetch("/api")
       .then((response) => response.json())
@@ -52,7 +60,7 @@ function App() {
         />
         <Route
           path="/productpage/products/:productID/edit"
-          element={<EditProductsForm products={products} />}
+          element={<EditProductsForm products={products} handleEditProduct={handleEditProduct} />}
         />
         <Route path="/adminlocation" element={<InventoryManagement />} />
         <Route path="/adminlocation/edit" element={<InventoryAdd />} />

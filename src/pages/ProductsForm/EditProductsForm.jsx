@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
-export default function EditProductsForm({products}) {
+
+export default function EditProductsForm({products,handleEditProduct}) {
+
 const {productID} = useParams();
 const navigate = useNavigate();
 const product = products.find(p => p._id === productID);
@@ -32,7 +34,9 @@ const handleEdit = async () => {
       },
       body: JSON.stringify(editedProduct),
     });
-     navigate("/productpage");
+    const updatedProduct = await response.json();
+    handleEditProduct(updatedProduct);
+    navigate("/productpage");
   };
     
   
