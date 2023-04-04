@@ -8,7 +8,6 @@ const locationSchema = new mongoose.Schema(
         productDetails: {
           type: Schema.Types.ObjectId,
           ref: "Product",
-          unique: true,
         },
         productQty: {
           type: Number,
