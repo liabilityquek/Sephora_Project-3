@@ -147,7 +147,7 @@ export default function () {
   }, []);
 
   return (
-    <div className="InventoryTable">
+    <div className="inventoryTable">
       {locationsData && locationsData.length ? (
         <div className="content">
           <div className="filterHeader">
