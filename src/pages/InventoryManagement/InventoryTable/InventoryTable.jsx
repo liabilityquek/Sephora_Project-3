@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import "./InventoryTable.css";
+import "./inventoryTable.css";
 import EditQuantityModal from "./EditQuantityModal/EditQuantityModal";
 import { useNavigate } from "react-router-dom";
 

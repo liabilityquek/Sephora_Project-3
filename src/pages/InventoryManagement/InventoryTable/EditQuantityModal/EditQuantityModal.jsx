@@ -46,12 +46,12 @@ export default function ({ productQty, onSubmitSuccess }) {
               </h5>
               <button
                 type="button"
-                className="close"
+                className="btn-close"
                 data-dismiss="modal"
                 aria-label="Close"
                 onClick={handleClose}
               >
-                <span aria-hidden="true">&times;</span>
+                <span aria-hidden="true"></span>
               </button>
             </div>
             <div className="modal-body">
