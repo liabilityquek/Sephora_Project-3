@@ -133,7 +133,17 @@ const addLocProduct = async (req, res) => {
 
     const location = await Location.findById(locationId);
 
-    // Add the new product to the location
+    // Check if product already exists in the location
+    const existingProduct = location.products.some(
+      (product) =>
+        product.productDetails.toString() === productId.toString() &&
+        product.productQty === qty
+    );
+    if (existingProduct) {
+      throw new Error(
+        "Product already exists at this location, please select new product to add."
+      );
+    }
     const newProduct = { productDetails: productId, productQty: qty };
     location.products.push(newProduct);
 
