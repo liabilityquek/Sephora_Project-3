@@ -11,9 +11,14 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import InventoryManagement from "./InventoryManagement/InventoryManagement";
 import AddProducts from "./ProductsForm/ProductsForm";
 import AddProductsForm from "./ProductsForm/AddProductsForm";
+import EditProductsForm from "./ProductsForm/EditProductsForm";
 
 function App() {
   const [products, setProducts] = useState([]);
+
+  const addProduct = (product) => setProducts(products.concat(product));
+
+
 
   useEffect(() => {
     fetch("/api")
@@ -33,7 +38,8 @@ function App() {
           path="/products/:productName"
           element={<SelectedProductPage products={products} />}/>
         <Route path="/productpage" element={<AddProducts products={products} />} />
-        <Route path="/productpage/new" element={<AddProductsForm/>} />
+        <Route path="/productpage/new" element={<AddProductsForm addProduct={addProduct}/>} />
+        <Route path="/productpage/products/:productID/edit" element={<EditProductsForm products={products}/>} />
         <Route path="/adminlocation" element={<InventoryManagement />} />
       </Routes>
     </main>

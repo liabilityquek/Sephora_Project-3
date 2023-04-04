@@ -8,6 +8,7 @@ export default function ProductsPage({products}) {
   const [sortByCategory, setSortByCategory] = useState("");
   const [category, setCategory] = useState([]);
   
+  
 
   useEffect(() => {
    const categories = [...new Set(products.map(p => p.category))];
@@ -20,7 +21,6 @@ export default function ProductsPage({products}) {
   if (sortByCategory) {
     filteredProductsCopy = filteredProductsCopy.filter((p) => p.category === sortByCategory);
   }
-
   if (sortByPrice === "lowToHigh") {
     filteredProductsCopy.sort((a, b) => a.price - b.price);
   } else if (sortByPrice === "highToLow") {

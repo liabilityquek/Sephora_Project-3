@@ -20,7 +20,21 @@ const addProducts = async (req, res) => {
   }
 };
 
+const updateProducts = async (req, res) => {
+  try {
+    const updatedProduct = await Products.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.status(200).json(updatedProduct);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+
 module.exports = {
   showProducts,
   addProducts,
+  updateProducts,
 };
