@@ -20,14 +20,16 @@ import { useEffect, useState } from "react";
 function App() {
   const [products, setProducts] = useState([]);
 
-
+  const addProduct = (product) => setProducts(products.concat(product));
 
   useEffect(() => {
     fetch("/api")
       .then((response) => response.json())
       .then((data) => setProducts(data))
       .catch((error) => console.error(error));
-  }, [products]);
+  }, []);
+
+
 
   return (
     <main className="App">
@@ -46,7 +48,7 @@ function App() {
         />
         <Route
           path="/productpage/new"
-          element={<AddProductsForm/>}
+          element={<AddProductsForm addProduct={addProduct}/>}
         />
         <Route
           path="/productpage/products/:productID/edit"
