@@ -10,8 +10,6 @@ const ProductSchema = new Schema(
     brand: {
       type: String,
       required: true,
-      unique: true,
-      collation: { locale: "en_US", strength: 2 },
     },
     category: { type: String, required: true },
   },
