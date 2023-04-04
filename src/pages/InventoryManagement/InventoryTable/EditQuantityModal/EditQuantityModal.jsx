@@ -44,13 +44,7 @@ export default function ({ productQty, onSubmitSuccess }) {
               <h5 className="modal-title" id="exampleModalLabel">
                 Modify quantity
               </h5>
-              <button
-                type="button"
-                className="btn-close"
-                data-dismiss="modal"
-                aria-label="Close"
-                onClick={handleClose}
-              >
+              <button type="button" className="btn-close" onClick={handleClose}>
                 <span aria-hidden="true"></span>
               </button>
             </div>

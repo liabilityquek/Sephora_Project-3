@@ -1,8 +1,7 @@
-import { Link } from 'react-router-dom';
-import "../InventoryManagement/InventoryTable/InventoryTable.css";
+import { Link } from "react-router-dom";
+import "../InventoryManagement/InventoryTable/inventoryTable.css";
 
-export default function AddProducts({products}) {
-
+export default function AddProducts({ products }) {
   return (
     <div className="table-responsive">
       <h1>Add Product</h1>
@@ -29,10 +28,14 @@ export default function AddProducts({products}) {
               <td>{p.category}</td>
               <td>{p.brand}</td>
               <td>{p.imgurl}</td>
-              <td><button>Delete</button></td>
-              <td><Link to={`/productpage/products/${p._id}/edit`}>
+              <td>
+                <button>Delete</button>
+              </td>
+              <td>
+                <Link to={`/productpage/products/${p._id}/edit`}>
                   <button>Edit</button>
-                </Link></td>
+                </Link>
+              </td>
             </tr>
           ))}
         </tbody>
