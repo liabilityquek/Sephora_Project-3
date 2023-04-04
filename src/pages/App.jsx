@@ -12,11 +12,15 @@ import AddProducts from "./ProductsForm/ProductsForm";
 import AddProductsForm from "./ProductsForm/AddProductsForm";
 import InventoryManagement from "./InventoryManagement/InventoryManagement";
 import InventoryAdd from "./InventoryAdd/InventoryAdd";
+import EditProductsForm from "./ProductsForm/EditProductsForm";
+
 import { Routes, Route } from "react-router";
 import { useEffect, useState } from "react";
 
 function App() {
   const [products, setProducts] = useState([]);
+
+  const addProduct = (product) => setProducts(products.concat(product));
 
   useEffect(() => {
     fetch("/api")
@@ -40,7 +44,14 @@ function App() {
           path="/productpage"
           element={<AddProducts products={products} />}
         />
-        <Route path="/productpage/new" element={<AddProductsForm />} />
+        <Route
+          path="/productpage/new"
+          element={<AddProductsForm addProduct={addProduct} />}
+        />
+        <Route
+          path="/productpage/products/:productID/edit"
+          element={<EditProductsForm products={products} />}
+        />
         <Route path="/adminlocation" element={<InventoryManagement />} />
         <Route path="/adminlocation/edit" element={<InventoryAdd />} />
       </Routes>
