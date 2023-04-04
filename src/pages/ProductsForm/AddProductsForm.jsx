@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-export default function AddProductsForm({addProduct}) {
+export default function AddProductsForm() {
   const navigate = useNavigate();
 
  const [product, setProduct] = useState({
@@ -28,7 +28,6 @@ export default function AddProductsForm({addProduct}) {
     });
     console.log(product);
     const newProduct = await response.json();
-    addProduct(newProduct);
     navigate("/productpage");
   };
 
