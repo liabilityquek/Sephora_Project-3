@@ -135,9 +135,7 @@ const addLocProduct = async (req, res) => {
 
     // Check if product already exists in the location
     const existingProduct = location.products.some(
-      (product) =>
-        product.productDetails.toString() === productId.toString() &&
-        product.productQty === qty
+      (product) => product.productDetails.toString() === productId.toString()
     );
     if (existingProduct) {
       throw new Error(
