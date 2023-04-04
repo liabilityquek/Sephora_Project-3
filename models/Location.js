@@ -5,7 +5,11 @@ const locationSchema = new mongoose.Schema(
     name: { type: String, required: true, unique: true, trime: true },
     products: [
       {
-        productDetails: { type: Schema.Types.ObjectId, ref: "Product" },
+        productDetails: {
+          type: Schema.Types.ObjectId,
+          ref: "Product",
+          unique: true,
+        },
         productQty: {
           type: Number,
           required: true,
