@@ -13,10 +13,10 @@ export default defineConfig({
     rollupOptions: {
       input: {
         main: "./src/main.jsx",
-        inventoryTable:
+        InventoryTable:
           "./src/pages/InventoryManagement/InventoryTable/InventoryTable.jsx",
-        inventoryTableCSS:
-          "./src/pages/InventoryManagement/InventoryTable/inventoryTable.css",
+        InventoryTableCSS:
+          "./src/pages/InventoryManagement/InventoryTable/InventoryTable.css",
       },
     },
   },

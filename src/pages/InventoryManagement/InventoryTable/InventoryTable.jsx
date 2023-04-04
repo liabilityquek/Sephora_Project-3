@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import EditQuantityModal from "./EditQuantityModal/EditQuantityModal";
 import { useNavigate } from "react-router-dom";
-import "./inventoryTable.css";
+import "./InventoryTable.css";
 
 export default function () {
   const navigate = useNavigate();
@@ -147,7 +147,7 @@ export default function () {
   }, []);
 
   return (
-    <div className="inventoryTable">
+    <div className="InventoryTable">
       {locationsData && locationsData.length ? (
         <div className="content">
           <div className="filterHeader">
