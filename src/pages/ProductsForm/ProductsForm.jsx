@@ -1,5 +1,4 @@
 import { Link } from "react-router-dom";
-import "../InventoryManagement/InventoryTable/inventoryTable.css";
 
 export default function AddProducts({ products }) {
   return (

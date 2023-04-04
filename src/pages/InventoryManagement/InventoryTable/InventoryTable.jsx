@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
-import "./inventoryTable.css";
 import EditQuantityModal from "./EditQuantityModal/EditQuantityModal";
 import { useNavigate } from "react-router-dom";
+import "./inventoryTable.css";
 
 export default function () {
   const navigate = useNavigate();
@@ -153,12 +153,7 @@ export default function () {
           <div className="filterHeader">
             <div className="rowHeader w-100">
               <div className="input-group input-group-sm">
-                <span
-                  className="input-group-text"
-                  id="inputGroup-sizing-default"
-                >
-                  Location
-                </span>
+                <span className="input-group-text">Location</span>
                 <select
                   className="form-select"
                   value={locationName}
@@ -178,17 +173,10 @@ export default function () {
               <div className="w-100">
                 <div className="rowHeader">
                   <div className="wd-300 input-group input-group-sm">
-                    <span
-                      className="input-group-text"
-                      id="inputGroup-sizing-default"
-                    >
-                      Search
-                    </span>
+                    <span className="input-group-text">Search</span>
                     <input
                       type="text"
                       className="form-control"
-                      aria-label="Sizing example input"
-                      aria-describedby="inputGroup-sizing-default"
                       placeholder="Enter Product name, id or brand"
                       onChange={handleSearchProduct}
                     ></input>

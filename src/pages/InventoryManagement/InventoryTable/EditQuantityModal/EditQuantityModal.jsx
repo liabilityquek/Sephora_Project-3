@@ -35,8 +35,6 @@ export default function ({ productQty, onSubmitSuccess }) {
         className="modal"
         style={{ display: show ? "block" : "none" }}
         id="exampleModal"
-        role="dialog"
-        aria-labelledby="exampleModalLabel"
       >
         <div className="modal-dialog" role="document">
           <div className="modal-content">
@@ -51,18 +49,11 @@ export default function ({ productQty, onSubmitSuccess }) {
             <div className="modal-body">
               <form onSubmit={handleEditQuantitySubmit}>
                 <div className="input-group mb-3">
-                  <span
-                    className="input-group-text"
-                    id="inputGroup-sizing-default"
-                  >
-                    Quantity
-                  </span>
+                  <span className="input-group-text">Quantity</span>
                   <input
                     min={0}
                     type="number"
                     className="form-control"
-                    aria-label="Sizing example input"
-                    aria-describedby="inputGroup-sizing-default"
                     defaultValue={formValues.productQty}
                     onChange={handleProductQtyChange}
                   ></input>
