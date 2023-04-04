@@ -9,4 +9,15 @@ export default defineConfig({
       "/api": "http://127.0.0.1:3000/",
     },
   },
+  build: {
+    rollupOptions: {
+      input: {
+        main: "./src/main.jsx",
+        inventoryTable:
+          "./src/pages/InventoryManagement/InventoryTable/InventoryTable.jsx",
+        inventoryTableCSS:
+          "./src/pages/InventoryManagement/InventoryTable/inventoryTable.css",
+      },
+    },
+  },
 });
