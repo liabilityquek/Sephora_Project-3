@@ -1,8 +1,10 @@
 import React, { useEffect, useState } from "react";
 import "./InventoryTable.css";
 import EditQuantityModal from "./EditQuantityModal/EditQuantityModal";
+import { useNavigate } from "react-router-dom";
 
 export default function () {
+  const navigate = useNavigate();
   const [locationsData, setLocationsData] = useState([]);
   const [locationName, setLocationName] = useState("");
   const [conditions, setConditions] = useState({
@@ -41,6 +43,26 @@ export default function () {
         {locationData.name}
       </option>
     ));
+  };
+
+  const handleDelete = async (locationId, productId) => {
+    try {
+      const response = await fetch(
+        `/api/locations/${locationId}/products/${productId}`,
+        {
+          method: "DELETE",
+        }
+      );
+
+      if (response.ok) {
+        initalizeLocationsData();
+      } else {
+        const error = await response.json();
+        console.log(error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const renderTableContent = () => {
@@ -91,7 +113,14 @@ export default function () {
                     initalizeLocationsData();
                   }}
                 ></EditQuantityModal>
-                <button className="btn btn-danger">Delete</button>
+                <button
+                  className="btn btn-danger"
+                  onClick={() =>
+                    handleDelete(selectedLocationData._id, productDetails._id)
+                  }
+                >
+                  REMOVE PRODUCT
+                </button>
               </td>
             </tr>
           );
@@ -106,6 +135,10 @@ export default function () {
       ...prevState,
       searchProductKeyword,
     }));
+  };
+
+  const redirectAddPage = () => {
+    navigate("/adminlocation/edit");
   };
 
   //Triggered when the component first load
@@ -160,8 +193,11 @@ export default function () {
                       onChange={handleSearchProduct}
                     ></input>
                   </div>
-                  <button className="btn btn-primary wd-300">
-                    Add new product
+                  <button
+                    className="btn btn-primary wd-300"
+                    onClick={redirectAddPage}
+                  >
+                    ADD NEW PRODUCT
                   </button>
                 </div>
                 <table className="table">
