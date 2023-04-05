@@ -20,7 +20,8 @@ export default function ProductsPage({products,sortByCategory,category,setSortBy
   }
   if (searchTerm) {
       filteredProductsCopy = filteredProductsCopy.filter((p) =>
-        p.name.toLowerCase().includes(searchTerm.toLowerCase())
+        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.brand.toLowerCase().includes(searchTerm.toLowerCase())
       );
   }
   setSortedProducts(filteredProductsCopy);
