@@ -1,27 +1,25 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-export default function AddProductsForm({addProduct,category,brand}) {
+export default function AddProductsForm({ addProduct, category, brand }) {
+  const navigate = useNavigate();
+  const defaultCategory = category[0];
+  const [product, setProduct] = useState({
+    name: "",
+    price: 0,
+    category: defaultCategory,
+    brand: "",
+    imgurl: "",
+    description: "",
+  });
 
-const navigate = useNavigate();
-const defaultCategory = category[0];
-const [product, setProduct] = useState({
-  name: "",
-  price: 0,
-  category: defaultCategory,
-  brand: "",
-  imgurl: "",
-  description: ""
-});
-
-const [newBrand, setNewBrand] = useState("");
+  const [newBrand, setNewBrand] = useState("");
 
   const handleChange = (event) => {
-  const key = event.target.name;
-  const value = event.target.value;
+    const key = event.target.name;
+    const value = event.target.value;
 
-  setProduct({ ...product, [key]: value });
-  
-};
+    setProduct({ ...product, [key]: value });
+  };
 
   const handleNewBrandChange = (event) => {
     const value = event.target.value;
@@ -29,40 +27,37 @@ const [newBrand, setNewBrand] = useState("");
   };
 
   const handleAdd = async () => {
-  if (product.brand === "Other") {
-    const newProduct = { ...product, brand: newBrand };
-    const response = await fetch("/api/AdminProduct/new", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newProduct),
-    });
-    const newProducts = await response.json();
-    addProduct(newProducts);
-  } else {
-    const response = await fetch("/api/AdminProduct/new", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(product),
-    });
-    const newProduct = await response.json();
-    addProduct(newProduct);
-  }
-  navigate("/productpage");
-};
-
+    if (product.brand === "Other") {
+      const newProduct = { ...product, brand: newBrand };
+      const response = await fetch("/api/AdminProduct/new", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newProduct),
+      });
+      const newProducts = await response.json();
+      addProduct(newProducts);
+    } else {
+      const response = await fetch("/api/AdminProduct/new", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(product),
+      });
+      const newProduct = await response.json();
+      addProduct(newProduct);
+    }
+    navigate("/productpage");
+  };
 
   return (
     <>
       <h1>Add Product Form</h1>
 
       <div className="mb-3">
-        <label className="form-label">
-          Product Name
-        </label>
+        <label className="form-label">Product Name</label>
         <input
           type="text"
           className="form-control"
@@ -87,9 +82,15 @@ const [newBrand, setNewBrand] = useState("");
         <label htmlFor="category" className="form-label">
           Category
         </label>
-       <select name="category" value={product.category} onChange={handleChange}>
-          {category.map((c,i) => (
-            <option key={i} value={c}>{c}</option>
+        <select
+          name="category"
+          value={product.category}
+          onChange={handleChange}
+        >
+          {category.map((c, i) => (
+            <option key={i} value={c}>
+              {c}
+            </option>
           ))}
         </select>
       </div>
@@ -98,14 +99,14 @@ const [newBrand, setNewBrand] = useState("");
           Brand
         </label>
         <select name="brand" value={product.brand} onChange={handleChange}>
-          {brand.map((b,i) => (
+          {brand.map((b, i) => (
             <option key={i} value={b}>
               {b}
             </option>
           ))}
           <option value="Other">Other</option>
-          </select>
-          {product.brand === "Other" && (
+        </select>
+        {product.brand === "Other" && (
           <div className="mt-3">
             <input
               type="text"
@@ -144,7 +145,6 @@ const [newBrand, setNewBrand] = useState("");
       <button onClick={handleAdd} className="btn btn-primary">
         Submit
       </button>
-
     </>
   );
 }
