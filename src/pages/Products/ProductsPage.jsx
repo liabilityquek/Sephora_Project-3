@@ -13,7 +13,6 @@ export default function ProductsPage({products}) {
   useEffect(() => {
    const categories = [...new Set(products.map(p => p.category))];
     setCategory(categories)
-
   }, [products]);
 
   useEffect(() => {
