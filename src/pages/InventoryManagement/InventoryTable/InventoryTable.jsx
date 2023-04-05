@@ -139,7 +139,7 @@ export default function () {
 
   const redirectAddPage = () => {
     navigate("/adminlocation/edit", {
-      state: { selectedLocationData },
+      state: { selectedLocationData, locationsData },
     });
   };
 
