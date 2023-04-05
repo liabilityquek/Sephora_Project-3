@@ -138,7 +138,9 @@ export default function () {
   };
 
   const redirectAddPage = () => {
-    navigate("/adminlocation/edit");
+    navigate("/adminlocation/edit", {
+      state: { selectedLocationData },
+    });
   };
 
   //Triggered when the component first load

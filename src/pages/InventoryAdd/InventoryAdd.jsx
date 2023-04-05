@@ -1,6 +1,11 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 
-export default function InventoryAdd({ locationName }) {
+export default function InventoryAdd() {
+  const { state } = useLocation();
+  const { selectedLocationData } = state; // Read values passed on state
+  const { _id: locationId, name: locationName } = selectedLocationData;
+
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProducts, setSelectedProducts] = useState([]);
   const [productList, setProductList] = useState([
@@ -10,6 +15,12 @@ export default function InventoryAdd({ locationName }) {
     { id: 4, name: "Product 4", brand: "Brand 4", quantity: 0 },
     { id: 5, name: "Product 5", brand: "Brand 5", quantity: 0 },
   ]);
+
+  useEffect(
+    () =>
+      alert("selectedLocationData: " + JSON.stringify(selectedLocationData)),
+    []
+  );
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
