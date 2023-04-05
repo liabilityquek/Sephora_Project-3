@@ -106,7 +106,7 @@ const editLocProductQty = async (req, res) => {
 const showAddProduct = async (req, res) => {
   try {
     const locationId = req.params.locationId;
-
+    console.log(req.params.locationId);
     const location = await Location.findById(locationId).populate(
       "products.productDetails"
     );

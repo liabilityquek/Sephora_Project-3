@@ -8,19 +8,23 @@ export default function InventoryAdd() {
 
   const [searchQuery, setSearchQuery] = useState("");
   const [selectedProducts, setSelectedProducts] = useState([]);
-  const [productList, setProductList] = useState([
-    { id: 1, name: "Product 1", brand: "Brand 1", quantity: 0 },
-    { id: 2, name: "Product 2", brand: "Brand 2", quantity: 0 },
-    { id: 3, name: "Product 3", brand: "Brand 3", quantity: 0 },
-    { id: 4, name: "Product 4", brand: "Brand 4", quantity: 0 },
-    { id: 5, name: "Product 5", brand: "Brand 5", quantity: 0 },
-  ]);
+  const [productList, setProductList] = useState([]);
 
-  useEffect(
-    () =>
-      alert("selectedLocationData: " + JSON.stringify(selectedLocationData)),
-    []
-  );
+  useEffect(() => {
+    const fetchProducts = async () => {
+      const response = await fetch(`/api/locations/getlocation/${locationId}`);
+      const locationData = await response.json();
+      setProductList(locationData.products);
+    };
+
+    fetchProducts();
+  }, []);
+
+  // useEffect(
+  //   () =>
+  //     alert("selectedLocationData: " + JSON.stringify(selectedLocationData)),
+  //   []
+  // );
 
   const handleSearchChange = (event) => {
     setSearchQuery(event.target.value);
