@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { useParams } from 'react-router-dom';
 import { useNavigate } from "react-router-dom";
 
-export default function EditProductsForm({products,handleEditProduct}) {
+export default function EditProductsForm({products,handleEditProduct,category,brand}) {
 
 const {productID} = useParams();
 const navigate = useNavigate();
@@ -69,25 +69,19 @@ const handleEdit = async () => {
         </div>
         <div className="form-group">
           <label htmlFor="category">Category:</label>
-          <input
-            type="text"
-            className="form-control"
-            id="category"
-            name="category"
-            value={editedProduct.category}
-            onChange={handleChange}
-          />
+          <select name="category" value={editedProduct.category} onChange={handleChange}>
+          {category.map((c,i) => (
+            <option key={i} value={c}>{c}</option>
+          ))}
+        </select>
         </div>
         <div className="form-group">
           <label htmlFor="brand">Brand:</label>
-          <input
-            type="text"
-            className="form-control"
-            id="brand"
-            name="brand"
-            value={editedProduct.brand}
-            onChange={handleChange}
-          />
+          <select name="brand" value={editedProduct.brand} onChange={handleChange}>
+          {brand.map((b,i) => (
+            <option key={i} value={b}>{b}</option>
+          ))}
+        </select>
         </div>
         <div className="form-group">
           <label htmlFor="imgurl">Image URL:</label>

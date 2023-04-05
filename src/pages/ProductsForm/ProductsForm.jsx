@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
+import ProductsDeleteButton from "./ProductsDeleteButton";
 
-export default function AddProducts({ products }) {
+export default function ProductsForm({ products, delProduct }) {
   return (
     <div className="table-responsive">
       <h1>Add Product</h1>
@@ -19,8 +20,8 @@ export default function AddProducts({ products }) {
           </tr>
         </thead>
         <tbody>
-          {products.map((p) => (
-            <tr key={p._id}>
+          {products.map((p,i) => (
+            <tr key={i}>
               <td>{p.name}</td>
               <td>{p._id}</td>
               <td>${(p.price / 100).toFixed(2)}</td>
@@ -28,7 +29,7 @@ export default function AddProducts({ products }) {
               <td>{p.brand}</td>
               <td>{p.imgurl}</td>
               <td>
-                <button>Delete</button>
+                 <ProductsDeleteButton id={p._id} delProduct={delProduct} />
               </td>
               <td>
                 <Link to={`/productpage/products/${p._id}/edit`}>

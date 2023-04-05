@@ -8,19 +8,25 @@ import NavBar from "../components/NavBar";
 import AppointmentPage from "./Appoinments/AppointmentPage";
 import ProductsPage from "./Products/ProductsPage";
 import SelectedProductPage from "./Products/SelectedProductPage";
-import AddProducts from "./ProductsForm/ProductsForm";
 import AddProductsForm from "./ProductsForm/AddProductsForm";
 import InventoryManagement from "./InventoryManagement/InventoryManagement";
 import InventoryAdd from "./InventoryAdd/InventoryAdd";
 import EditProductsForm from "./ProductsForm/EditProductsForm";
+import ProductsForm from "./ProductsForm/ProductsForm";
 
 import { Routes, Route } from "react-router";
 import { useEffect, useState } from "react";
 
+
 function App() {
   const [products, setProducts] = useState([]);
-
+  const [sortByCategory, setSortByCategory] = useState("");
+  const [category, setCategory] = useState([]);
+  const [brand, setBrand] = useState([]);
+  
   const addProduct = (product) => setProducts(products.concat(product));
+  const delProduct = (id) =>
+    setProducts(products.filter(({ _id }) => _id !== id));
 
   const handleEditProduct = (editedProduct) => {
   setProducts((prevProducts) =>
@@ -29,6 +35,15 @@ function App() {
     )
   );
 };
+
+  useEffect(() => {
+    const categories = [...new Set(products.map(p => p.category))];
+    setCategory(categories)
+
+    const brands = [...new Set(products.map(p => p.brand))];
+    setBrand(brands);
+
+  }, [products]);
 
   useEffect(() => {
     fetch("/api")
@@ -45,22 +60,22 @@ function App() {
       <Home />
       <Routes>
         <Route path="/booking" element={<AppointmentPage />} />
-        <Route path="/" element={<ProductsPage products={products} />} />
+        <Route path="/" element={<ProductsPage products={products} category={category} sortByCategory={sortByCategory} setSortByCategory={setSortByCategory} />} />
         <Route
           path="/products/:productName"
           element={<SelectedProductPage products={products} />}
         />
         <Route
           path="/productpage"
-          element={<AddProducts products={products} />}
+          element={<ProductsForm products={products} delProduct={delProduct} />}
         />
         <Route
           path="/productpage/new"
-          element={<AddProductsForm addProduct={addProduct}/>}
+          element={<AddProductsForm addProduct={addProduct} category={category} brand={brand} />}
         />
         <Route
           path="/productpage/products/:productID/edit"
-          element={<EditProductsForm products={products} handleEditProduct={handleEditProduct} />}
+          element={<EditProductsForm products={products} category={category} brand={brand} handleEditProduct={handleEditProduct} />}
         />
         <Route path="/adminlocation" element={<InventoryManagement />} />
         <Route path="/adminlocation/edit" element={<InventoryAdd />} />
