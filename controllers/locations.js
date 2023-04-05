@@ -129,21 +129,36 @@ const showAddProduct = async (req, res) => {
 const addLocProduct = async (req, res) => {
   try {
     const locationId = req.params.locationId;
-    const { productId, qty } = req.body;
+    const productsToAdd = req.body.products; // an array of objects containing productId and qty
 
     const location = await Location.findById(locationId);
 
-    // Check if product already exists in the location
-    const existingProduct = location.products.some(
-      (product) => product.productDetails.toString() === productId.toString()
+    // Check if any of the selected products already exist in the location
+    const existingProducts = location.products.map((product) =>
+      product.productDetails.toString()
     );
-    if (existingProduct) {
-      throw new Error(
-        "Product already exists at this location, please select new product to add."
-      );
+    const newProducts = [];
+    const existingProductNames = [];
+    for (const product of productsToAdd) {
+      if (existingProducts.includes(product.productId.toString())) {
+        const existingProduct = await Product.findById(product.productId);
+        existingProductNames.push(existingProduct.name);
+      } else {
+        newProducts.push({
+          productDetails: product.productId,
+          productQty: product.qty,
+        });
+      }
     }
-    const newProduct = { productDetails: productId, productQty: qty };
-    location.products.push(newProduct);
+
+    if (existingProductNames.length > 0) {
+      const message = `The following products already exist in the location, please select new products to add: ${existingProductNames.join(
+        ", "
+      )}`;
+      throw new Error(message);
+    }
+
+    location.products.push(...newProducts);
 
     const updatedLocation = await location.save();
 
