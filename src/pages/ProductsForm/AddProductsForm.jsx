@@ -3,11 +3,12 @@ import { useNavigate } from "react-router-dom";
 export default function AddProductsForm({ addProduct, category, brand }) {
   const navigate = useNavigate();
   const defaultCategory = category[0];
+  const defaultBrand = brand[0];
   const [product, setProduct] = useState({
     name: "",
     price: 0,
     category: defaultCategory,
-    brand: "",
+    brand: defaultBrand,
     imgurl: "",
     description: "",
   });
