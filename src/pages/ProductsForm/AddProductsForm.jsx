@@ -1,12 +1,13 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 export default function AddProductsForm({addProduct,category,brand}) {
-const TODOLLAR = 100;
+
 const navigate = useNavigate();
+const defaultCategory = category[0];
 const [product, setProduct] = useState({
   name: "",
   price: 0,
-  category: "",
+  category: defaultCategory,
   brand: "",
   imgurl: "",
   description: ""
@@ -21,7 +22,6 @@ const [newBrand, setNewBrand] = useState("");
   setProduct({ ...product, [key]: value });
   
 };
-
 
   const handleNewBrandChange = (event) => {
     const value = event.target.value;
@@ -38,7 +38,8 @@ const [newBrand, setNewBrand] = useState("");
       },
       body: JSON.stringify(newProduct),
     });
-    addProduct(newProduct);
+    const newProducts = await response.json();
+    addProduct(newProducts);
   } else {
     const response = await fetch("/api/AdminProduct/new", {
       method: "POST",
