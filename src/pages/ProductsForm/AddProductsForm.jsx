@@ -28,7 +28,7 @@ export default function AddProductsForm({addProduct}) {
     });
     console.log(product);
     const newProduct = await response.json();
-    addProduct(newProduct);
+    addProduct(newProduct)
     navigate("/productpage");
   };
 

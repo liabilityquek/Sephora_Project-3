@@ -22,12 +22,22 @@ function App() {
 
   const addProduct = (product) => setProducts(products.concat(product));
 
+  const handleEditProduct = (editedProduct) => {
+  setProducts((prevProducts) =>
+    prevProducts.map((product) =>
+      product._id === editedProduct._id ? editedProduct : product
+    )
+  );
+};
+
   useEffect(() => {
     fetch("/api")
       .then((response) => response.json())
       .then((data) => setProducts(data))
       .catch((error) => console.error(error));
   }, []);
+
+
 
   return (
     <main className="App">
@@ -46,11 +56,11 @@ function App() {
         />
         <Route
           path="/productpage/new"
-          element={<AddProductsForm addProduct={addProduct} />}
+          element={<AddProductsForm addProduct={addProduct}/>}
         />
         <Route
           path="/productpage/products/:productID/edit"
-          element={<EditProductsForm products={products} />}
+          element={<EditProductsForm products={products} handleEditProduct={handleEditProduct} />}
         />
         <Route path="/adminlocation" element={<InventoryManagement />} />
         <Route path="/adminlocation/edit" element={<InventoryAdd />} />
