@@ -20,8 +20,8 @@ export default function ProductsForm({ products, delProduct }) {
           </tr>
         </thead>
         <tbody>
-          {products.map((p) => (
-            <tr key={p._id}>
+          {products.map((p,i) => (
+            <tr key={i}>
               <td>{p.name}</td>
               <td>{p._id}</td>
               <td>${(p.price / 100).toFixed(2)}</td>

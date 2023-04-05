@@ -2,18 +2,10 @@ import { useEffect, useState } from "react";
 import { Link } from 'react-router-dom';
 
 
-export default function ProductsPage({products}) {
+export default function ProductsPage({products,sortByCategory,category,setSortByCategory}) {
   const [sortedProducts, setSortedProducts] = useState([]);
   const [sortByPrice, setSortByPrice] = useState("");
-  const [sortByCategory, setSortByCategory] = useState("");
-  const [category, setCategory] = useState([]);
-  
-  
-
-  useEffect(() => {
-   const categories = [...new Set(products.map(p => p.category))];
-    setCategory(categories)
-  }, [products]);
+ 
 
   useEffect(() => {
     let filteredProductsCopy = [...products];
@@ -34,7 +26,7 @@ export default function ProductsPage({products}) {
     <>
       <h1>Products Pages</h1>
       <div>
-        <label>Sort by:</label>
+        <label>Sort by Price:</label>
         <select value={sortByPrice} onChange={(e) => setSortByPrice(e.target.value)}>
           <option value="">All Products</option>
           <option value="lowToHigh">Low to high</option>

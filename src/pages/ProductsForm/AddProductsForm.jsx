@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-export default function AddProductsForm({addProduct}) {
-  const navigate = useNavigate();
-
- const [product, setProduct] = useState({
+export default function AddProductsForm({addProduct,category,brand}) {
+const TODOLLAR = 100;
+const navigate = useNavigate();
+const [product, setProduct] = useState({
   name: "",
   price: 0,
   category: "",
@@ -12,13 +12,34 @@ export default function AddProductsForm({addProduct}) {
   description: ""
 });
 
+const [newBrand, setNewBrand] = useState("");
+
   const handleChange = (event) => {
-    const key = event.target.name;
+  const key = event.target.name;
+  const value = event.target.value;
+
+  setProduct({ ...product, [key]: value });
+  
+};
+
+
+  const handleNewBrandChange = (event) => {
     const value = event.target.value;
-    setProduct({ ...product, [key]: value });
+    setNewBrand(value);
   };
 
   const handleAdd = async () => {
+  if (product.brand === "Other") {
+    const newProduct = { ...product, brand: newBrand };
+    const response = await fetch("/api/AdminProduct/new", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newProduct),
+    });
+    addProduct(newProduct);
+  } else {
     const response = await fetch("/api/AdminProduct/new", {
       method: "POST",
       headers: {
@@ -26,11 +47,12 @@ export default function AddProductsForm({addProduct}) {
       },
       body: JSON.stringify(product),
     });
-    console.log(product);
     const newProduct = await response.json();
-    addProduct(newProduct)
-    navigate("/productpage");
-  };
+    addProduct(newProduct);
+  }
+  navigate("/productpage");
+};
+
 
   return (
     <>
@@ -50,7 +72,7 @@ export default function AddProductsForm({addProduct}) {
       </div>
       <div className="mb-3">
         <label htmlFor="price" className="form-label">
-          Price (in cents)
+          Price in (cents)
         </label>
         <input
           type="number"
@@ -64,25 +86,36 @@ export default function AddProductsForm({addProduct}) {
         <label htmlFor="category" className="form-label">
           Category
         </label>
-        <input
-          type="text"
-          className="form-control"
-          name="category"
-          value={product.category}
-          onChange={handleChange}
-        />
+       <select name="category" value={product.category} onChange={handleChange}>
+          {category.map((c,i) => (
+            <option key={i} value={c}>{c}</option>
+          ))}
+        </select>
       </div>
       <div className="mb-3">
         <label htmlFor="brand" className="form-label">
           Brand
         </label>
-        <input
-          type="text"
-          className="form-control"
-          name="brand"
-          value={product.brand}
-          onChange={handleChange}
-        />
+        <select name="brand" value={product.brand} onChange={handleChange}>
+          {brand.map((b,i) => (
+            <option key={i} value={b}>
+              {b}
+            </option>
+          ))}
+          <option value="Other">Other</option>
+          </select>
+          {product.brand === "Other" && (
+          <div className="mt-3">
+            <input
+              type="text"
+              className="form-control"
+              name="newBrand"
+              value={newBrand}
+              placeholder="Enter a new brand"
+              onChange={handleNewBrandChange}
+            />
+          </div>
+        )}
       </div>
       <div className="mb-3">
         <label htmlFor="imgurl" className="form-label">

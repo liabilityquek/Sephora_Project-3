@@ -20,7 +20,10 @@ import { useEffect, useState } from "react";
 
 function App() {
   const [products, setProducts] = useState([]);
-
+  const [sortByCategory, setSortByCategory] = useState("");
+  const [category, setCategory] = useState([]);
+  const [brand, setBrand] = useState([]);
+  
   const addProduct = (product) => setProducts(products.concat(product));
   const delProduct = (id) =>
     setProducts(products.filter(({ _id }) => _id !== id));
@@ -32,6 +35,15 @@ function App() {
     )
   );
 };
+
+  useEffect(() => {
+    const categories = [...new Set(products.map(p => p.category))];
+    setCategory(categories)
+
+    const brands = [...new Set(products.map(p => p.brand))];
+    setBrand(brands);
+
+  }, [products]);
 
   useEffect(() => {
     fetch("/api")
@@ -48,7 +60,7 @@ function App() {
       <Home />
       <Routes>
         <Route path="/booking" element={<AppointmentPage />} />
-        <Route path="/" element={<ProductsPage products={products} />} />
+        <Route path="/" element={<ProductsPage products={products} category={category} sortByCategory={sortByCategory} setSortByCategory={setSortByCategory} />} />
         <Route
           path="/products/:productName"
           element={<SelectedProductPage products={products} />}
@@ -59,11 +71,11 @@ function App() {
         />
         <Route
           path="/productpage/new"
-          element={<AddProductsForm addProduct={addProduct}/>}
+          element={<AddProductsForm addProduct={addProduct} category={category} brand={brand} />}
         />
         <Route
           path="/productpage/products/:productID/edit"
-          element={<EditProductsForm products={products} handleEditProduct={handleEditProduct} />}
+          element={<EditProductsForm products={products} category={category} brand={brand} handleEditProduct={handleEditProduct} />}
         />
         <Route path="/adminlocation" element={<InventoryManagement />} />
         <Route path="/adminlocation/edit" element={<InventoryAdd />} />
