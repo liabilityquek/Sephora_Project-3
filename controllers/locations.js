@@ -153,6 +153,25 @@ const addLocProduct = async (req, res) => {
   }
 };
 
+const deleteProductFromBothCol = async (req, res) => {
+  try {
+    const { productID } = req.params;
+    console.log(productID);
+    await Location.updateMany(
+      { "products.productDetails": productID },
+      { $pull: { products: { productDetails: productID } } },
+      { multi: true }
+    );
+    await Product.findByIdAndDelete(productID);
+    res.status(200).json({ message: "Product deleted successfully" });
+  } catch (error) {
+    console.error(error);
+    res
+      .status(500)
+      .json({ error: "An error occurred while deleting the product" });
+  }
+};
+
 module.exports = {
   findLocationByProductName,
   showLocation,
@@ -160,4 +179,5 @@ module.exports = {
   editLocProductQty,
   showAddProduct,
   addLocProduct,
+  deleteProductFromBothCol,
 };

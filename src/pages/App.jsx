@@ -8,19 +8,22 @@ import NavBar from "../components/NavBar";
 import AppointmentPage from "./Appoinments/AppointmentPage";
 import ProductsPage from "./Products/ProductsPage";
 import SelectedProductPage from "./Products/SelectedProductPage";
-import AddProducts from "./ProductsForm/ProductsForm";
 import AddProductsForm from "./ProductsForm/AddProductsForm";
 import InventoryManagement from "./InventoryManagement/InventoryManagement";
 import InventoryAdd from "./InventoryAdd/InventoryAdd";
 import EditProductsForm from "./ProductsForm/EditProductsForm";
+import ProductsForm from "./ProductsForm/ProductsForm";
 
 import { Routes, Route } from "react-router";
 import { useEffect, useState } from "react";
+
 
 function App() {
   const [products, setProducts] = useState([]);
 
   const addProduct = (product) => setProducts(products.concat(product));
+  const delProduct = (id) =>
+    setProducts(products.filter(({ _id }) => _id !== id));
 
   const handleEditProduct = (editedProduct) => {
   setProducts((prevProducts) =>
@@ -52,7 +55,7 @@ function App() {
         />
         <Route
           path="/productpage"
-          element={<AddProducts products={products} />}
+          element={<ProductsForm products={products} delProduct={delProduct} />}
         />
         <Route
           path="/productpage/new"
