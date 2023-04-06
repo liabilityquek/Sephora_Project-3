@@ -49,7 +49,9 @@ export default function InventoryAdd() {
     }
   };
 
-  const handleSaveChanges = async () => {
+  const handleSaveChanges = async (event) => {
+    event.preventDefault(); // prevent default form submission behavior
+
     try {
       const selectedProducts = productList.filter(
         (product) => product.isChecked
@@ -134,50 +136,54 @@ export default function InventoryAdd() {
           </div>
         </div>
       </div>
-      <table>
-        <thead>
-          <tr>
-            <th>Select</th>
-            <th>Product Name</th>
-            <th>Product Id</th>
-            <th>Product Brand</th>
-            <th>Product Quantity</th>
-          </tr>
-        </thead>
-        <tbody>
-          {filteredProductList.map((product) => (
-            <tr key={product._id}>
-              <td>
-                <input
-                  type="checkbox"
-                  checked={product.isChecked}
-                  onChange={(event) => handleCheckboxChange(event, product._id)}
-                />
-              </td>
-              <td>{product.name}</td>
-              <td>{product._id}</td>
-              <td>{product.brand}</td>
-              <td>
-                <input
-                  type="number"
-                  placeholder="Enter quantity"
-                  min={0}
-                  disabled={!product.isChecked}
-                  required
-                  value={product.productQty || ""}
-                  onChange={(event) => handleQuantityChange(event, product._id)} // add this line
-                />
-              </td>
+      <form onSubmit={handleSaveChanges}>
+        <table>
+          <thead>
+            <tr>
+              <th>Select</th>
+              <th>Product Name</th>
+              <th>Product Id</th>
+              <th>Product Brand</th>
+              <th>Product Quantity</th>
             </tr>
-          ))}
-        </tbody>
-      </table>
-      <div>
-        <button onClick={handleSaveChanges} disabled={isSaveDisabled}>
-          SAVE CHANGES
-        </button>
-        <button onClick={handleCancel}>CANCEL</button>
-      </div>
+          </thead>
+          <tbody>
+            {filteredProductList.map((product) => (
+              <tr key={product._id}>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={product.isChecked}
+                    onChange={(event) =>
+                      handleCheckboxChange(event, product._id)
+                    }
+                  />
+                </td>
+                <td>{product.name}</td>
+                <td>{product._id}</td>
+                <td>{product.brand}</td>
+                <td>
+                  <input
+                    type="number"
+                    placeholder="Enter quantity"
+                    min={0}
+                    disabled={!product.isChecked}
+                    required
+                    value={product.productQty || ""}
+                    onChange={(event) =>
+                      handleQuantityChange(event, product._id)
+                    } // add this line
+                  />
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+        <div>
+          <button disabled={isSaveDisabled}>SAVE CHANGES</button>
+          <button onClick={handleCancel}>CANCEL</button>
+        </div>
+      </form>
     </div>
   );
 }
