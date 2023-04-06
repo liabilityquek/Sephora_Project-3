@@ -129,11 +129,18 @@ const showAddProduct = async (req, res) => {
 const addLocProduct = async (req, res) => {
   try {
     const locationId = req.params.locationId;
-    const productsToAdd = req.body.products; // an array of objects containing productId and qty
-
+    const productsToAdd = req.body.products;
     const location = await Location.findById(locationId);
 
-    // Check if any of the selected products already exist in the location
+    //check all product has quantity
+    const hasMissingQuantity = productsToAdd.some(
+      (product) => !product.productQty
+    );
+    if (hasMissingQuantity) {
+      throw new Error("All selected products must have a quantity entered.");
+    }
+
+    // Check if selected products already exist in the location
     const existingProducts = location.products.map((product) =>
       product.productDetails.toString()
     );

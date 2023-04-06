@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import "../../pages/InventoryManagement/InventoryTable/InventoryTable.css";
 
 export default function InventoryAdd() {
   const { state } = useLocation();
   const { selectedLocationData } = state;
   const { _id: locationId, name: locationName } = selectedLocationData;
-
   const [productList, setProductList] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
 
   const navigate = useNavigate(); // Initialize the navigate object
 
@@ -31,19 +32,21 @@ export default function InventoryAdd() {
     setProductList((prevState) =>
       prevState.map((product) =>
         product._id === productId
-          ? { ...product, isChecked, productQty: isChecked ? 0 : undefined } // set productQty to 0 when the product is selected
+          ? { ...product, isChecked } // set isChecked property to true when the product is selected
           : product
       )
     );
   };
 
   const handleQuantityChange = (event, productId) => {
-    const productQty = event.target.value;
-    setProductList((prevState) =>
-      prevState.map((product) =>
-        product._id === productId ? { ...product, productQty } : product
-      )
-    );
+    const productQty = Number(event.target.value);
+    if (productQty >= 0) {
+      setProductList((prevState) =>
+        prevState.map((product) =>
+          product._id === productId ? { ...product, productQty } : product
+        )
+      );
+    }
   };
 
   const handleSaveChanges = async () => {
@@ -55,6 +58,17 @@ export default function InventoryAdd() {
         productId: product._id,
         productQty: Number(product.productQty),
       }));
+
+      if (selectedProducts.length === 0) {
+        throw new Error("Please select at least one product.");
+      }
+
+      if (
+        selectedProducts.filter((product) => product.productQty === undefined)
+          .length > 0
+      ) {
+        throw new Error("Please add quantity for selected products.");
+      }
 
       const response = await fetch(`/api/locations/${locationId}`, {
         method: "POST",
@@ -90,9 +104,36 @@ export default function InventoryAdd() {
     productList.filter((product) => product.productQty && !product.isChecked)
       .length > 0; // check if there are any products with a quantity entered that are not selected
 
+  const filteredProductList = productList.filter((product) => {
+    const productDetail = {
+      _id: product._id,
+      brand: product.brand,
+      name: product.name,
+    };
+    const keyword = searchValue.trim().toLowerCase();
+    return (
+      productDetail._id.toLowerCase().trim().includes(keyword) ||
+      productDetail.brand.toLowerCase().trim().includes(keyword) ||
+      productDetail.name.toLowerCase().trim().includes(keyword)
+    );
+  });
+
   return (
     <div>
       <h2>Add products to: {locationName}</h2>
+      <div className="w-100">
+        <div className="rowHeader">
+          <div className="wd-300 input-group input-group-sm">
+            <span className="input-group-text">Search</span>
+            <input
+              type="text"
+              className="form-control"
+              placeholder="Enter Product name, id or brand"
+              onChange={(e) => setSearchValue(e.target.value)}
+            ></input>
+          </div>
+        </div>
+      </div>
       <table>
         <thead>
           <tr>
@@ -104,7 +145,7 @@ export default function InventoryAdd() {
           </tr>
         </thead>
         <tbody>
-          {productList.map((product) => (
+          {filteredProductList.map((product) => (
             <tr key={product._id}>
               <td>
                 <input
@@ -133,9 +174,9 @@ export default function InventoryAdd() {
       </table>
       <div>
         <button onClick={handleSaveChanges} disabled={isSaveDisabled}>
-          Save Changes
+          SAVE CHANGES
         </button>
-        <button onClick={handleCancel}>Cancel</button>
+        <button onClick={handleCancel}>CANCEL</button>
       </div>
     </div>
   );
