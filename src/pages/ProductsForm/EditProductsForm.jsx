@@ -10,6 +10,7 @@ export default function EditProductsForm({
 }) {
   const { productID } = useParams();
   const navigate = useNavigate();
+  const CONVERTTODOLLAR = 100;
   const product = products.find((p) => p._id === productID);
 
   const [editedProduct, setEditedProduct] = useState(
@@ -41,12 +42,16 @@ export default function EditProductsForm({
       alert("Product with the same name already exists!");
       return;
     } else {
+      const newProduct = {
+        ...editedProduct,
+        price: product.price * CONVERTTODOLLAR,
+      };
       const response = await fetch(`/api/AdminProduct/${productID}/edit`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
         },
-        body: JSON.stringify(editedProduct),
+        body: JSON.stringify(newProduct),
       });
       const updatedProduct = await response.json();
       handleEditProduct(updatedProduct);
@@ -70,7 +75,7 @@ export default function EditProductsForm({
         />
       </div>
       <div className="form-group">
-        <label htmlFor="price">Price in cents:</label>
+        <label htmlFor="price">Price:</label>
         <input
           type="number"
           className="form-control"

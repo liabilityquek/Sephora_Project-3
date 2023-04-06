@@ -46,7 +46,24 @@ export default function AddProductsForm({
     setNewBrand(value);
   };
 
+  const handleAddProduct = async (newProduct) => {
+    const response = await fetch("/api/AdminProduct/new", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(newProduct),
+    });
+    const newProducts = await response.json();
+    addProduct(newProducts);
+    
+  };
+
   const handleAdd = async () => {
+    const nameExists = products.some(
+      (p) => p.name.toLowerCase() === product.name.toLowerCase()
+    );
+
     if (
       !product.name ||
       !product.price ||
@@ -57,30 +74,19 @@ export default function AddProductsForm({
     ) {
       alert("Please fill in all required fields.");
       return;
-    }
-
-    const nameExists = products.some(
-      (p) => p.name.toLowerCase() === product.name.toLowerCase()
-    );
-    if (nameExists) {
+    } else if (nameExists) {
       alert("Product name already exists.");
       return;
     } else {
-      const newProduct = { ...product, price: product.price * CONVERTTODOLLAR, newBrands: newBrand };
-      const response = await fetch("/api/AdminProduct/new", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(newProduct),
-      });
-      const newProducts = await response.json();
-      addProduct(newProducts);
-      console.log(newProducts);
+      const newProduct = {
+        ...product,
+        price: product.price * CONVERTTODOLLAR,
+        newBrands: newBrand,
+      };
+      handleAddProduct(newProduct);
+      navigate("/productpage");
     }
-    navigate("/productpage");
   };
-
   return (
     <>
       <h1>Add Product Form</h1>
