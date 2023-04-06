@@ -25,7 +25,7 @@ export default function SelectedProductPage({products}) {
             <br></br>
             <label>{p.name}</label>
             <br></br>
-<label>{(p.price / 100).toLocaleString("en-US", { style: "currency", currency: "SGD" })}</label>
+            <label>{(p.price / 100).toLocaleString("en-US", { style: "currency", currency: "SGD" })}</label>
             <br></br>
             <label>Description: {p.description}</label>
         </div>

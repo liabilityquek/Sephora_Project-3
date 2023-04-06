@@ -24,7 +24,15 @@ function App() {
   const [category, setCategory] = useState([]);
   const [brand, setBrand] = useState([]);
   
-  const addProduct = (product) => setProducts(products.concat(product));
+  const addProduct = (product, error) => {
+  if (error) {
+    // Handle the error, e.g. display an error message
+    console.error(error);
+    return;
+  }
+  // Add the product to the products list
+  setProducts(products.concat(product));
+};
   const delProduct = (id) =>
     setProducts(products.filter(({ _id }) => _id !== id));
 
@@ -71,7 +79,7 @@ function App() {
         />
         <Route
           path="/productpage/new"
-          element={<AddProductsForm addProduct={addProduct} category={category} brand={brand} />}
+          element={<AddProductsForm addProduct={addProduct} products={products} category={category} brand={brand} />}
         />
         <Route
           path="/productpage/products/:productID/edit"

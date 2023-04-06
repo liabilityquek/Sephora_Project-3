@@ -1,9 +1,15 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-export default function AddProductsForm({ addProduct, category, brand }) {
+export default function AddProductsForm({
+  addProduct,
+  category,
+  brand,
+  products,
+}) {
   const navigate = useNavigate();
   const defaultCategory = category[0];
   const defaultBrand = brand[0];
+  const CONVERTTODOLLAR = 100;
   const [product, setProduct] = useState({
     name: "",
     price: 0,
@@ -11,13 +17,26 @@ export default function AddProductsForm({ addProduct, category, brand }) {
     brand: defaultBrand,
     imgurl: "",
     description: "",
+    newBrands: "",
   });
 
   const [newBrand, setNewBrand] = useState("");
 
   const handleChange = (event) => {
     const key = event.target.name;
-    const value = event.target.value;
+    let value = event.target.value;
+
+    if (key === "price") {
+      if (value === "") {
+        value = "";
+      } else {
+        value = parseInt(value);
+        if (isNaN(value)) {
+          alert("Please enter a valid number for price.");
+          return;
+        }
+      }
+    }
 
     setProduct({ ...product, [key]: value });
   };
@@ -28,8 +47,26 @@ export default function AddProductsForm({ addProduct, category, brand }) {
   };
 
   const handleAdd = async () => {
-    if (product.brand === "Other") {
-      const newProduct = { ...product, brand: newBrand };
+    if (
+      !product.name ||
+      !product.price ||
+      !product.category ||
+      !product.brand ||
+      !product.imgurl ||
+      !product.description
+    ) {
+      alert("Please fill in all required fields.");
+      return;
+    }
+
+    const nameExists = products.some(
+      (p) => p.name.toLowerCase() === product.name.toLowerCase()
+    );
+    if (nameExists) {
+      alert("Product name already exists.");
+      return;
+    } else {
+      const newProduct = { ...product, price: product.price * CONVERTTODOLLAR, newBrands: newBrand };
       const response = await fetch("/api/AdminProduct/new", {
         method: "POST",
         headers: {
@@ -39,16 +76,7 @@ export default function AddProductsForm({ addProduct, category, brand }) {
       });
       const newProducts = await response.json();
       addProduct(newProducts);
-    } else {
-      const response = await fetch("/api/AdminProduct/new", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(product),
-      });
-      const newProduct = await response.json();
-      addProduct(newProduct);
+      console.log(newProducts);
     }
     navigate("/productpage");
   };
@@ -69,7 +97,7 @@ export default function AddProductsForm({ addProduct, category, brand }) {
       </div>
       <div className="mb-3">
         <label htmlFor="price" className="form-label">
-          Price in (cents)
+          Price
         </label>
         <input
           type="number"
