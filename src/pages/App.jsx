@@ -3,8 +3,8 @@ import "../index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "@popperjs/core/dist/umd/popper.min.js";
-import Home from "../components/Home";
-import NavBar from "../components/NavBar";
+import Header from "../components/Header/Header";
+import NavBar from "../components/NavBar/NavBar";
 import AppointmentPage from "./Appoinments/AppointmentPage";
 import ProductsPage from "./Products/ProductsPage";
 import SelectedProductPage from "./Products/SelectedProductPage";
@@ -17,32 +17,30 @@ import ProductsForm from "./ProductsForm/ProductsForm";
 import { Routes, Route } from "react-router";
 import { useEffect, useState } from "react";
 
-
 function App() {
   const [products, setProducts] = useState([]);
   const [sortByCategory, setSortByCategory] = useState("");
   const [category, setCategory] = useState([]);
   const [brand, setBrand] = useState([]);
-  
+
   const addProduct = (product) => setProducts(products.concat(product));
   const delProduct = (id) =>
     setProducts(products.filter(({ _id }) => _id !== id));
 
   const handleEditProduct = (editedProduct) => {
-  setProducts((prevProducts) =>
-    prevProducts.map((product) =>
-      product._id === editedProduct._id ? editedProduct : product
-    )
-  );
-};
+    setProducts((prevProducts) =>
+      prevProducts.map((product) =>
+        product._id === editedProduct._id ? editedProduct : product
+      )
+    );
+  };
 
   useEffect(() => {
-    const categories = [...new Set(products.map(p => p.category))];
-    setCategory(categories)
+    const categories = [...new Set(products.map((p) => p.category))];
+    setCategory(categories);
 
-    const brands = [...new Set(products.map(p => p.brand))];
+    const brands = [...new Set(products.map((p) => p.brand))];
     setBrand(brands);
-
   }, [products]);
 
   useEffect(() => {
@@ -52,15 +50,25 @@ function App() {
       .catch((error) => console.error(error));
   }, []);
 
-
-
   return (
     <main className="App">
-      <NavBar />
-      <Home />
+      <Header />
+      <div className="nav-bar-container">
+        <NavBar />
+      </div>
       <Routes>
         <Route path="/booking" element={<AppointmentPage />} />
-        <Route path="/" element={<ProductsPage products={products} category={category} sortByCategory={sortByCategory} setSortByCategory={setSortByCategory} />} />
+        <Route
+          path="/"
+          element={
+            <ProductsPage
+              products={products}
+              category={category}
+              sortByCategory={sortByCategory}
+              setSortByCategory={setSortByCategory}
+            />
+          }
+        />
         <Route
           path="/products/:productName"
           element={<SelectedProductPage products={products} />}
@@ -71,11 +79,24 @@ function App() {
         />
         <Route
           path="/productpage/new"
-          element={<AddProductsForm addProduct={addProduct} category={category} brand={brand} />}
+          element={
+            <AddProductsForm
+              addProduct={addProduct}
+              category={category}
+              brand={brand}
+            />
+          }
         />
         <Route
           path="/productpage/products/:productID/edit"
-          element={<EditProductsForm products={products} category={category} brand={brand} handleEditProduct={handleEditProduct} />}
+          element={
+            <EditProductsForm
+              products={products}
+              category={category}
+              brand={brand}
+              handleEditProduct={handleEditProduct}
+            />
+          }
         />
         <Route path="/adminlocation" element={<InventoryManagement />} />
         <Route path="/adminlocation/edit" element={<InventoryAdd />} />
