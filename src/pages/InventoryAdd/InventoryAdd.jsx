@@ -7,6 +7,7 @@ export default function InventoryAdd() {
   const { _id: locationId, name: locationName } = selectedLocationData;
 
   const [productList, setProductList] = useState([]);
+  const [searchValue, setSearchValue] = useState("");
 
   const navigate = useNavigate(); // Initialize the navigate object
 
@@ -31,26 +32,33 @@ export default function InventoryAdd() {
     setProductList((prevState) =>
       prevState.map((product) =>
         product._id === productId
-          ? { ...product, isChecked, productQty: isChecked ? 0 : undefined } // set productQty to 0 when the product is selected
+          ? { ...product, isChecked } // set isChecked property to true when the product is selected
           : product
       )
     );
   };
 
   const handleQuantityChange = (event, productId) => {
-    const productQty = event.target.value;
-    setProductList((prevState) =>
-      prevState.map((product) =>
-        product._id === productId ? { ...product, productQty } : product
-      )
-    );
+    const productQty = Number(event.target.value);
+    if (productQty >= 0) {
+      setProductList((prevState) =>
+        prevState.map((product) =>
+          product._id === productId ? { ...product, productQty } : product
+        )
+      );
+    }
   };
 
   const handleSaveChanges = async () => {
     try {
       const selectedProducts = productList.filter(
-        (product) => product.isChecked
+        (product) => product.isChecked && product.productQty !== undefined
       );
+
+      if (selectedProducts.length === 0) {
+        throw new Error("Please add quantity for selected products.");
+      }
+
       const productsToAdd = selectedProducts.map((product) => ({
         productId: product._id,
         productQty: Number(product.productQty),
@@ -70,16 +78,44 @@ export default function InventoryAdd() {
       navigate("/adminlocation");
     } catch (error) {
       console.error("Failed to save changes:", error);
+      window.alert(error.message);
     }
   };
 
   const handleCancel = () => {
-    // TODO: Handle cancel logic
+    setProductList((prevState) =>
+      prevState.map((product) => ({
+        ...product,
+        isChecked: false,
+        productQty: undefined,
+      }))
+    );
   };
+
+  const filteredProducts = productList.filter((product) =>
+    [product._id, product.name, product.brand]
+      .join(" ")
+      .toLowerCase()
+      .includes(searchValue.toLowerCase())
+  );
+
+  const isSaveDisabled =
+    productList.filter((product) => product.isChecked).length === 0 ||
+    productList.filter(
+      (product) => product.isChecked && product.productQty === undefined
+    ).length > 0;
 
   return (
     <div>
       <h2>Add products to: {locationName}</h2>
+      <div>
+        <input
+          type="text"
+          placeholder="Search by name, ID, or brand"
+          value={searchValue}
+          onChange={(e) => setSearchValue(e.target.value)}
+        />
+      </div>
       <table>
         <thead>
           <tr>
@@ -91,7 +127,7 @@ export default function InventoryAdd() {
           </tr>
         </thead>
         <tbody>
-          {productList.map((product) => (
+          {filteredProducts.map((product) => (
             <tr key={product._id}>
               <td>
                 <input
@@ -119,7 +155,9 @@ export default function InventoryAdd() {
         </tbody>
       </table>
       <div>
-        <button onClick={handleSaveChanges}>Save Changes</button>
+        <button onClick={handleSaveChanges} disabled={isSaveDisabled}>
+          Save Changes
+        </button>
         <button onClick={handleCancel}>Cancel</button>
       </div>
     </div>
