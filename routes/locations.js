@@ -9,7 +9,7 @@ router.delete(
   locationsCtrl.deleteLocProduct
 );
 router.put("/:locationId/products/:productId", locationsCtrl.editLocProductQty);
-router.get("/:locationId", locationsCtrl.showAddProduct);
+router.get("/getlocation/:locationId", locationsCtrl.showAddProduct);
 router.post("/:locationId/", locationsCtrl.addLocProduct);
 router.delete("/products/:productID", locationsCtrl.deleteProductFromBothCol);
 

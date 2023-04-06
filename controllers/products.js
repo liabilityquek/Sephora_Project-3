@@ -24,7 +24,6 @@ const addProducts = async (req, res) => {
       if (brandExists) {
         throw new Error("Brand already exists");
       }
-      brand = newBrand;
     }
 
     const { newBrands, ...newProduct } = req.body; // Remove the newBrands field
@@ -39,6 +38,12 @@ const addProducts = async (req, res) => {
 
 const updateProducts = async (req, res) => {
   try {
+    const updatedName = req.body.name;
+    const existingProduct = await Products.findOne({ name: updatedName });
+    if (existingProduct && existingProduct._id.toString() !== req.params.id) {
+      throw new Error("Another product with the same name already exists");
+    }
+
     const updatedProduct = await Products.findByIdAndUpdate(
       req.params.id,
       req.body,
