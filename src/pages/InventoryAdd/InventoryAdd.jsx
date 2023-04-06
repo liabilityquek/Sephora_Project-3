@@ -30,11 +30,48 @@ export default function InventoryAdd() {
     const isChecked = event.target.checked;
     setProductList((prevState) =>
       prevState.map((product) =>
-        product._id === productId ? { ...product, isChecked } : product
+        product._id === productId
+          ? { ...product, isChecked, productQty: isChecked ? 0 : undefined } // set productQty to 0 when the product is selected
+          : product
       )
     );
   };
-  const handleSaveChanges = async () => {};
+
+  const handleQuantityChange = (event, productId) => {
+    const productQty = event.target.value;
+    setProductList((prevState) =>
+      prevState.map((product) =>
+        product._id === productId ? { ...product, productQty } : product
+      )
+    );
+  };
+
+  const handleSaveChanges = async () => {
+    try {
+      const selectedProducts = productList.filter(
+        (product) => product.isChecked
+      );
+      const productsToAdd = selectedProducts.map((product) => ({
+        productId: product._id,
+        productQty: Number(product.productQty),
+      }));
+
+      const response = await fetch(`/api/locations/${locationId}`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ products: productsToAdd }),
+      });
+
+      if (!response.ok) {
+        const error = await response.json();
+        throw new Error(error.message || "Failed to add products");
+      }
+
+      navigate("/adminlocation");
+    } catch (error) {
+      console.error("Failed to save changes:", error);
+    }
+  };
 
   const handleCancel = () => {
     // TODO: Handle cancel logic
@@ -72,6 +109,9 @@ export default function InventoryAdd() {
                   placeholder="Enter quantity"
                   min={0}
                   disabled={!product.isChecked}
+                  required
+                  value={product.productQty || ""}
+                  onChange={(event) => handleQuantityChange(event, product._id)} // add this line
                 />
               </td>
             </tr>

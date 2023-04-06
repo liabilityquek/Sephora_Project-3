@@ -146,7 +146,7 @@ const addLocProduct = async (req, res) => {
       } else {
         newProducts.push({
           productDetails: product.productId,
-          productQty: product.qty,
+          productQty: product.productQty,
         });
       }
     }
