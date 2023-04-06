@@ -7,7 +7,6 @@ export default function InventoryAdd() {
   const { _id: locationId, name: locationName } = selectedLocationData;
 
   const [productList, setProductList] = useState([]);
-  const [searchValue, setSearchValue] = useState("");
 
   const navigate = useNavigate(); // Initialize the navigate object
 
@@ -32,33 +31,26 @@ export default function InventoryAdd() {
     setProductList((prevState) =>
       prevState.map((product) =>
         product._id === productId
-          ? { ...product, isChecked } // set isChecked property to true when the product is selected
+          ? { ...product, isChecked, productQty: isChecked ? 0 : undefined } // set productQty to 0 when the product is selected
           : product
       )
     );
   };
 
   const handleQuantityChange = (event, productId) => {
-    const productQty = Number(event.target.value);
-    if (productQty >= 0) {
-      setProductList((prevState) =>
-        prevState.map((product) =>
-          product._id === productId ? { ...product, productQty } : product
-        )
-      );
-    }
+    const productQty = event.target.value;
+    setProductList((prevState) =>
+      prevState.map((product) =>
+        product._id === productId ? { ...product, productQty } : product
+      )
+    );
   };
 
   const handleSaveChanges = async () => {
     try {
       const selectedProducts = productList.filter(
-        (product) => product.isChecked && product.productQty !== undefined
+        (product) => product.isChecked
       );
-
-      if (selectedProducts.length === 0) {
-        throw new Error("Please add quantity for selected products.");
-      }
-
       const productsToAdd = selectedProducts.map((product) => ({
         productId: product._id,
         productQty: Number(product.productQty),
@@ -78,7 +70,6 @@ export default function InventoryAdd() {
       navigate("/adminlocation");
     } catch (error) {
       console.error("Failed to save changes:", error);
-      window.alert(error.message);
     }
   };
 
@@ -92,30 +83,16 @@ export default function InventoryAdd() {
     );
   };
 
-  const filteredProducts = productList.filter((product) =>
-    [product._id, product.name, product.brand]
-      .join(" ")
-      .toLowerCase()
-      .includes(searchValue.toLowerCase())
-  );
-
   const isSaveDisabled =
-    productList.filter((product) => product.isChecked).length === 0 ||
-    productList.filter(
-      (product) => product.isChecked && product.productQty === undefined
-    ).length > 0;
+    productList.filter((product) => product.isChecked).length === 0 || // check if at least one item is selected
+    productList.filter((product) => product.isChecked && !product.productQty)
+      .length > 0 || // check if all selected items have a quantity entered
+    productList.filter((product) => product.productQty && !product.isChecked)
+      .length > 0; // check if there are any products with a quantity entered that are not selected
 
   return (
     <div>
       <h2>Add products to: {locationName}</h2>
-      <div>
-        <input
-          type="text"
-          placeholder="Search by name, ID, or brand"
-          value={searchValue}
-          onChange={(e) => setSearchValue(e.target.value)}
-        />
-      </div>
       <table>
         <thead>
           <tr>
@@ -127,7 +104,7 @@ export default function InventoryAdd() {
           </tr>
         </thead>
         <tbody>
-          {filteredProducts.map((product) => (
+          {productList.map((product) => (
             <tr key={product._id}>
               <td>
                 <input
