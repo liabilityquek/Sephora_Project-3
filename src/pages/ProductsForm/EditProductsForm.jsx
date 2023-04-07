@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
-
+import "./forms.css";
 export default function EditProductsForm({
   products,
   handleEditProduct,
@@ -59,85 +59,113 @@ export default function EditProductsForm({
     }
   };
 
+  const handleCancel = async () => {
+    navigate("/productpage");
+  };
+
   return (
     <>
-      <h1 className="mb-4">Edit Products Page</h1>
-
-      <div className="form-group">
-        <label htmlFor="name">Name:</label>
-        <input
-          type="text"
-          className="form-control"
-          id="name"
-          name="name"
-          value={editedProduct.name}
-          onChange={handleChange}
-        />
+      <div className="form-container">
+        <h1>Edit Product</h1>
+        <div>
+          <label className="form-label" htmlFor="name">
+            Name
+          </label>
+          <input
+            type="text"
+            className="form-input"
+            id="name"
+            name="name"
+            value={editedProduct.name}
+            onChange={handleChange}
+          />
+        </div>
+        <div>
+          <label className="form-label" htmlFor="price">
+            Price
+          </label>
+          <input
+            type="number"
+            className="form-input"
+            id="price"
+            name="price"
+            value={editedProduct.price}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="form-group">
+          <label className="form-label" htmlFor="category">
+            Category
+          </label>
+          <select
+            name="category"
+            value={editedProduct.category}
+            onChange={handleChange}
+            className="select-input"
+          >
+            {category.map((c, i) => (
+              <option key={i} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="form-group">
+          <label className="form-label" htmlFor="brand">
+            Brand
+          </label>
+          <select
+            name="brand"
+            value={editedProduct.brand}
+            onChange={handleChange}
+            className="select-input"
+          >
+            {brand.map((b, i) => (
+              <option key={i} value={b}>
+                {b}
+              </option>
+            ))}
+          </select>
+        </div>
+        <div className="form-group">
+          <label className="form-label" htmlFor="imgurl">
+            Image URL
+          </label>
+          <input
+            type="text"
+            className="form-input"
+            id="imgurl"
+            name="imgurl"
+            value={editedProduct.imgurl}
+            onChange={handleChange}
+          />
+        </div>
+        <div className="form-group">
+          <label className="form-label" htmlFor="description">
+            Description
+          </label>
+          <textarea
+            className="form-input"
+            id="description"
+            name="description"
+            value={editedProduct.description}
+            onChange={handleChange}
+            style={{ resize: "both" }} // make the textarea resizable
+          />
+        </div>
+        <div>
+          <button onClick={handleEdit} className="btn btn-dark mx-4">
+            Save Changes
+          </button>
+          <button
+            onClick={handleCancel}
+            type="button"
+            className="btn btn-secondary mx-4"
+          >
+            Cancel
+          </button>
+        </div>
       </div>
-      <div className="form-group">
-        <label htmlFor="price">Price:</label>
-        <input
-          type="number"
-          className="form-control"
-          id="price"
-          name="price"
-          value={editedProduct.price}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="category">Category:</label>
-        <select
-          name="category"
-          value={editedProduct.category}
-          onChange={handleChange}
-        >
-          {category.map((c, i) => (
-            <option key={i} value={c}>
-              {c}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="form-group">
-        <label htmlFor="brand">Brand:</label>
-        <select
-          name="brand"
-          value={editedProduct.brand}
-          onChange={handleChange}
-        >
-          {brand.map((b, i) => (
-            <option key={i} value={b}>
-              {b}
-            </option>
-          ))}
-        </select>
-      </div>
-      <div className="form-group">
-        <label htmlFor="imgurl">Image URL:</label>
-        <input
-          type="text"
-          className="form-control"
-          id="imgurl"
-          name="imgurl"
-          value={editedProduct.imgurl}
-          onChange={handleChange}
-        />
-      </div>
-      <div className="form-group">
-        <label htmlFor="description">Description:</label>
-        <textarea
-          className="form-control"
-          id="description"
-          name="description"
-          value={editedProduct.description}
-          onChange={handleChange}
-          style={{ resize: "both" }} // make the textarea resizable
-        />
-      </div>
-      <button onClick={handleEdit} className="btn btn-primary mt-3">
-        Save Changes
-      </button>
     </>
   );
 }
