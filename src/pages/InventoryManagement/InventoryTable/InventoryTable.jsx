@@ -86,7 +86,7 @@ export default function () {
           const productQty = product.productQty;
           const productDetails = product.productDetails;
           return (
-            <tr key={productDetails._id}>
+            <tr key={`${productDetails._id}${selectedLocationData._id}`}>
               <td>{productDetails.name}</td>
               <td>{productDetails._id}</td>
               <td>{productDetails.brand}</td>
@@ -95,7 +95,6 @@ export default function () {
                 <EditQuantityModal
                   productQty={productQty}
                   onSubmitSuccess={async (newProductQty) => {
-                    debugger;
                     const response = await fetch(
                       `/api/locations/${selectedLocationData._id}/products/${productDetails._id}`,
                       {

@@ -8,34 +8,40 @@ export default function InventoryAdd() {
   const { _id: locationId, name: locationName } = selectedLocationData;
   const [productList, setProductList] = useState([]);
   const [searchValue, setSearchValue] = useState("");
+  const [checkedMap, setCheckedMap] = useState({});
 
   const navigate = useNavigate(); // Initialize the navigate object
 
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await fetch(
-          `/api/locations/getlocation/${locationId}`
-        );
-        const { newProducts } = await response.json();
-        setProductList(newProducts);
-      } catch (error) {
-        console.error("Failed to fetch products:", error);
-      }
-    };
+  const fetchProducts = async () => {
+    try {
+      const response = await fetch(`/api/locations/getlocation/${locationId}`);
+      const { newProducts } = await response.json();
+      setProductList(newProducts);
+      resetCheckedList(newProducts);
+    } catch (error) {
+      console.error("Failed to fetch products:", error);
+    }
+  };
 
+  const resetCheckedList = (products) => {
+    const productCheckedList = products.reduce((prev, product) => {
+      prev[product._id] = false;
+      return prev;
+    }, {});
+    setCheckedMap(productCheckedList);
+  };
+
+  useEffect(() => {
     fetchProducts();
   }, [locationId]);
 
   const handleCheckboxChange = (event, productId) => {
     const isChecked = event.target.checked;
-    setProductList((prevState) =>
-      prevState.map((product) =>
-        product._id === productId
-          ? { ...product, isChecked } // set isChecked property to true when the product is selected
-          : product
-      )
-    );
+
+    setCheckedMap((prevState) => ({
+      ...prevState,
+      [productId]: isChecked,
+    }));
   };
 
   const handleQuantityChange = (event, productId) => {
@@ -54,7 +60,7 @@ export default function InventoryAdd() {
 
     try {
       const selectedProducts = productList.filter(
-        (product) => product.isChecked
+        (product) => checkedMap[product._id]
       );
       const productsToAdd = selectedProducts.map((product) => ({
         productId: product._id,
@@ -89,22 +95,17 @@ export default function InventoryAdd() {
     }
   };
 
-  const handleCancel = () => {
-    setProductList((prevState) =>
-      prevState.map((product) => ({
-        ...product,
-        isChecked: false,
-        productQty: undefined,
-      }))
-    );
+  const handleCancel = (e) => {
+    e.preventDefault();
+    console.log("clear");
+    fetchProducts();
   };
 
   const isSaveDisabled =
-    productList.filter((product) => product.isChecked).length === 0 || // check if at least one item is selected
-    productList.filter((product) => product.isChecked && !product.productQty)
-      .length > 0 || // check if all selected items have a quantity entered
-    productList.filter((product) => product.productQty && !product.isChecked)
-      .length > 0; // check if there are any products with a quantity entered that are not selected
+    !productList.some((product) => checkedMap[product._id]) || // check if at least one item is selected
+    productList.some(
+      (product) => checkedMap[product._id] && !product.productQty
+    ); // check if all selected items have a quantity entered
 
   const filteredProductList = productList.filter((product) => {
     const productDetail = {
@@ -153,7 +154,7 @@ export default function InventoryAdd() {
                 <td>
                   <input
                     type="checkbox"
-                    checked={product.isChecked}
+                    checked={checkedMap[product._id]}
                     onChange={(event) =>
                       handleCheckboxChange(event, product._id)
                     }
@@ -167,7 +168,7 @@ export default function InventoryAdd() {
                     type="number"
                     placeholder="Enter quantity"
                     min={0}
-                    disabled={!product.isChecked}
+                    disabled={!checkedMap[product._id]}
                     required
                     value={product.productQty || ""}
                     onChange={(event) =>
@@ -181,7 +182,7 @@ export default function InventoryAdd() {
         </table>
         <div>
           <button disabled={isSaveDisabled}>SAVE CHANGES</button>
-          <button onClick={handleCancel}>CANCEL</button>
+          <button onClick={handleCancel}>CLEAR</button>
         </div>
       </form>
     </div>
