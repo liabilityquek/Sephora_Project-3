@@ -40,9 +40,9 @@ const findLocationByProductName = async (req, res) => {
 
 const showLocation = async (req, res) => {
   try {
-    const locations = await Location.find({}).populate(
-      "products.productDetails"
-    );
+    const locations = await Location.find({})
+      .populate("products.productDetails")
+      .sort({ name: 1 });
     res.status(200).json(locations);
   } catch (error) {
     res.status(400).json({ error: error.message });
@@ -80,7 +80,7 @@ const editLocProductQty = async (req, res) => {
     console.log("edit location quantity");
     const locationId = req.params.locationId; // get location id
     const productId = req.params.productId; // get the product id
-    const newQty = req.body.qty; // get the new quantity
+    const newProductQty = req.body.productQty; // get the new quantity
 
     const location = await Location.findById(locationId);
 
@@ -90,7 +90,7 @@ const editLocProductQty = async (req, res) => {
 
     // If the product exists in the array, update its quantity
     if (product) {
-      product.productQty = newQty;
+      product.productQty = newProductQty;
     } else {
       return res.status(404).json({ error: "Product not found in location" });
     }
@@ -116,9 +116,9 @@ const showAddProduct = async (req, res) => {
     const existingProducts = location.products.map((p) =>
       p.productDetails._id.toString()
     );
-    const newProducts = allProducts.filter(
-      (p) => !existingProducts.includes(p._id.toString())
-    );
+    const newProducts = allProducts
+      .filter((p) => !existingProducts.includes(p._id.toString()))
+      .sort((a, b) => (a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1));
 
     res.status(200).json({ location, newProducts });
   } catch (error) {
@@ -129,11 +129,18 @@ const showAddProduct = async (req, res) => {
 const addLocProduct = async (req, res) => {
   try {
     const locationId = req.params.locationId;
-    const productsToAdd = req.body.products; // an array of objects containing productId and qty
-
+    const productsToAdd = req.body.products;
     const location = await Location.findById(locationId);
 
-    // Check if any of the selected products already exist in the location
+    //check all product has quantity
+    const hasMissingQuantity = productsToAdd.some(
+      (product) => !product.productQty
+    );
+    if (hasMissingQuantity) {
+      throw new Error("All selected products must have a quantity entered.");
+    }
+
+    // Check if selected products already exist in the location
     const existingProducts = location.products.map((product) =>
       product.productDetails.toString()
     );
@@ -146,7 +153,7 @@ const addLocProduct = async (req, res) => {
       } else {
         newProducts.push({
           productDetails: product.productId,
-          productQty: product.qty,
+          productQty: product.productQty,
         });
       }
     }
