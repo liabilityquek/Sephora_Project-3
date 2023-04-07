@@ -31,7 +31,7 @@ export default function LoginForm({ setUser }) {
       console.log(Name.customer.name)
       console.log(Name.customer.email)
       setUser(decoded);
-      navigate("/booking");
+      navigate("/");
       console.log(decoded)
     } catch (error) {
       setError(error.message);
