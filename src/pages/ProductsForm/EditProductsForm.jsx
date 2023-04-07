@@ -35,16 +35,28 @@ export default function EditProductsForm({
   };
 
   const handleEdit = async () => {
-    const response = await fetch(`/api/AdminProduct/${productID}/edit`, {
-      method: "PUT",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(editedProduct),
-    });
-    const updatedProduct = await response.json();
-    handleEditProduct(updatedProduct);
-    navigate("/productpage");
+    const nameExists = products.some(
+      (p) => p._id !== productID && p.name === editedProduct.name
+    );
+    if (nameExists) {
+      alert("Product with the same name already exists!");
+      return;
+    } else {
+      const newProduct = {
+        ...editedProduct,
+        price: product.price * CONVERTTODOLLAR,
+      };
+      const response = await fetch(`/api/AdminProduct/${productID}/edit`, {
+        method: "PUT",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newProduct),
+      });
+      const updatedProduct = await response.json();
+      handleEditProduct(updatedProduct);
+      navigate("/productpage");
+    }
   };
 
   const handleCancel = async () => {

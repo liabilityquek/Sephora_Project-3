@@ -10,6 +10,7 @@ export default function AddProductsForm({
   const navigate = useNavigate();
   const defaultCategory = category[0];
   const defaultBrand = brand[0];
+  const CONVERTTODOLLAR = 100;
   const [product, setProduct] = useState({
     name: "",
     price: 0,
@@ -17,13 +18,26 @@ export default function AddProductsForm({
     brand: defaultBrand,
     imgurl: "",
     description: "",
+    newBrands: "",
   });
 
   const [newBrand, setNewBrand] = useState("");
 
   const handleChange = (event) => {
     const key = event.target.name;
-    const value = event.target.value;
+    let value = event.target.value;
+
+    if (key === "price") {
+      if (value === "") {
+        value = "";
+      } else {
+        value = parseInt(value);
+        if (isNaN(value)) {
+          alert("Please enter a valid number for price.");
+          return;
+        }
+      }
+    }
 
     setProduct({ ...product, [key]: value });
   };
@@ -64,17 +78,14 @@ export default function AddProductsForm({
       alert("Product name already exists.");
       return;
     } else {
-      const response = await fetch("/api/AdminProduct/new", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify(product),
-      });
-      const newProduct = await response.json();
-      addProduct(newProduct);
+      const newProduct = {
+        ...product,
+        price: product.price * CONVERTTODOLLAR,
+        newBrands: newBrand,
+      };
+      handleAddProduct(newProduct);
+      navigate("/productpage");
     }
-    navigate("/productpage");
   };
 
   const handleCancel = async () => {
