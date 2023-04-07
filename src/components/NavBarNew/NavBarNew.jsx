@@ -1,7 +1,7 @@
 import { NavLink } from "react-router-dom";
-import "./NavBar.css";
+import "./NavBarNew.css";
 
-export default function NavBar() {
+export default function NavBarNew() {
   return (
     <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom">
       <ul className="navbar-nav justify-content-center">
