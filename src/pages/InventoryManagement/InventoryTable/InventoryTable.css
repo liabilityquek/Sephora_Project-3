@@ -52,3 +52,7 @@ button .wd-300,
 .actionsTableData {
   display: flex;
 }
+
+table tr:hover {
+  background-color: #f2f2f2;
+}

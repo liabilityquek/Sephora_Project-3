@@ -3,6 +3,7 @@ import "../index.css";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "@popperjs/core/dist/umd/popper.min.js";
+import Header from "../components/Header/Header";
 import NavBar from "../components/NavBar";
 import AppointmentPage from "./Appoinments/AppointmentPage";
 import Map from "./Map/Map";
@@ -25,14 +26,22 @@ import ProductsPage from "./Products/ProductsPage";
 import { Routes, Route } from "react-router";
 import { useEffect, useState } from "react";
 
-function App() {
+export default function App() {
   const [user, setUser] = useState(getUser());
   const [products, setProducts] = useState([]);
   const [sortByCategory, setSortByCategory] = useState("");
   const [category, setCategory] = useState([]);
   const [brand, setBrand] = useState([]);
 
-  const addProduct = (product) => setProducts(products.concat(product));
+  const addProduct = (product, error) => {
+    if (error) {
+      // Handle the error, e.g. display an error message
+      console.error(error);
+      return;
+    }
+    // Add the product to the products list
+    setProducts(products.concat(product));
+  };
   const delProduct = (id) =>
     setProducts(products.filter(({ _id }) => _id !== id));
 
@@ -62,7 +71,8 @@ function App() {
   if (user === null) {
     return (
       <main className="App">
-        <NavBar />
+        <Header />
+        <NavBar setUser={setUser} />
         <AuthPage setUser={setUser} />
         <Routes>
           <Route path="/maps" element={<Map />} />
@@ -133,5 +143,3 @@ function App() {
     );
   }
 }
-
-export default App;
