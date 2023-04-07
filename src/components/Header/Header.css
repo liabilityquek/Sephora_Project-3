@@ -1,20 +1,9 @@
-.logo {
-  height: 150px;
-  padding-top: 5px;
-  position: absolute;
-  top: 0;
-  left: 0;
+.navbar-nav .nav-link:hover {
+  text-decoration: underline !important;
+  background-color: transparent !important;
 }
 
-/* .header {
-  margin-bottom: 20px;
-} */
-.header-button {
-  display: flex;
-  align-items: center;
-}
-
-.header-button button {
-  border: 1px solid black;
-  margin-left: 10px;
+.my-dropdown .dropdown-item:hover > a {
+  text-decoration: underline !important;
+  color: black !important;
 }

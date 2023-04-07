@@ -12,15 +12,9 @@ export default function NavBar() {
         </li>
         <li className="nav-item">
           <NavLink className="nav-link text-black nav-link-hover" to="/booking">
-            Appointment Booking
+            Book an Appointment
           </NavLink>
         </li>
-        <NavLink
-          className="nav-link text-black nav-link-hover"
-          to="/adminlocation"
-        >
-          Inventory Management
-        </NavLink>
       </ul>
     </nav>
   );
