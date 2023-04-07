@@ -1,15 +1,9 @@
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-export default function AddProductsForm({
-  addProduct,
-  category,
-  brand,
-  products,
-}) {
+export default function AddProductsForm({ addProduct, category, brand }) {
   const navigate = useNavigate();
   const defaultCategory = category[0];
   const defaultBrand = brand[0];
-  const CONVERTTODOLLAR = 100;
   const [product, setProduct] = useState({
     name: "",
     price: 0,
@@ -17,26 +11,13 @@ export default function AddProductsForm({
     brand: defaultBrand,
     imgurl: "",
     description: "",
-    newBrands: "",
   });
 
   const [newBrand, setNewBrand] = useState("");
 
   const handleChange = (event) => {
     const key = event.target.name;
-    let value = event.target.value;
-
-    if (key === "price") {
-      if (value === "") {
-        value = "";
-      } else {
-        value = parseInt(value);
-        if (isNaN(value)) {
-          alert("Please enter a valid number for price.");
-          return;
-        }
-      }
-    }
+    const value = event.target.value;
 
     setProduct({ ...product, [key]: value });
   };
@@ -46,47 +27,32 @@ export default function AddProductsForm({
     setNewBrand(value);
   };
 
-  const handleAddProduct = async (newProduct) => {
-    const response = await fetch("/api/AdminProduct/new", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(newProduct),
-    });
-    const newProducts = await response.json();
-    addProduct(newProducts);
-    
-  };
-
   const handleAdd = async () => {
-    const nameExists = products.some(
-      (p) => p.name.toLowerCase() === product.name.toLowerCase()
-    );
-
-    if (
-      !product.name ||
-      !product.price ||
-      !product.category ||
-      !product.brand ||
-      !product.imgurl ||
-      !product.description
-    ) {
-      alert("Please fill in all required fields.");
-      return;
-    } else if (nameExists) {
-      alert("Product name already exists.");
-      return;
+    if (product.brand === "Other") {
+      const newProduct = { ...product, brand: newBrand };
+      const response = await fetch("/api/AdminProduct/new", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(newProduct),
+      });
+      const newProducts = await response.json();
+      addProduct(newProducts);
     } else {
-      const newProduct = {
-        ...product,
-        price: product.price * CONVERTTODOLLAR,
-        newBrands: newBrand,
-      };
-      handleAddProduct(newProduct);
-      navigate("/productpage");
+      const response = await fetch("/api/AdminProduct/new", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(product),
+      });
+      const newProduct = await response.json();
+      addProduct(newProduct);
     }
+    navigate("/productpage");
   };
+
   return (
     <>
       <h1>Add Product Form</h1>
@@ -103,7 +69,7 @@ export default function AddProductsForm({
       </div>
       <div className="mb-3">
         <label htmlFor="price" className="form-label">
-          Price
+          Price in (cents)
         </label>
         <input
           type="number"

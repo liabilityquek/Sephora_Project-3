@@ -1,39 +1,13 @@
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
 import ProductsDeleteButton from "./ProductsDeleteButton";
 
 export default function ProductsForm({ products, delProduct }) {
-
-const [searchTerm, setSearchTerm] = useState("");
-const [sortedProducts, setSortedProducts] = useState([]);
-
-useEffect(() => {
-    let filteredProductsCopy = [...products];
- 
-  if (searchTerm) {
-      filteredProductsCopy = filteredProductsCopy.filter((p) =>
-        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.category.toLowerCase().includes(searchTerm.toLowerCase())
-      );
-  }
-  setSortedProducts(filteredProductsCopy);
-}, [searchTerm, products]);
-
-const handleSearchChange = (e) => {
-    setSearchTerm(e.target.value);
-  };
-
   return (
     <div className="table-responsive">
       <h1>Add Product</h1>
       <Link to="/productpage/new">
         <button>Add Product</button>
       </Link>
-      <div>
-        <label>Search:</label>
-        <input type="text" value={searchTerm} onChange={handleSearchChange} />
-      </div>
       <table className="table table-striped table-hover table-bordered">
         <thead>
           <tr>
@@ -46,7 +20,7 @@ const handleSearchChange = (e) => {
           </tr>
         </thead>
         <tbody>
-          {sortedProducts.map((p,i) => (
+          {products.map((p,i) => (
             <tr key={i}>
               <td>{p.name}</td>
               <td>{p._id}</td>

@@ -1,55 +1,59 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import BookingForm from "./BookingForm";
-import {makeupArtist} from "./time"
 
-const Booking = ({ setSelectedArtist, setLocation, setCustomerInfo, customerInfo }) => {
-  const [form, setForm] = useState({});
-  const [selectArtist, setSelectArtist] = useState({});
+const Booking = ({ setSelectedArtist, setCustomerInfo, customerInfo, fetchedLocations}) => {
+
+  const [selectArtist, setSelectArtist] = useState([]);
   const [selectLocation, setSelectLocation] = useState("");
 
+  useEffect(() => {
+    if (selectLocation) {
+      const token = localStorage.getItem("token");
+  
+      fetch(`/api/calender/${selectLocation}`, {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": `Bearer ${token}`,
+        },
+      })
+        .then((response) => response.json())
+        .then((data) => setSelectArtist(data))
+        .catch((error) =>
+          console.error("Error fetching makeup artists:", error)
+        );
+    }
+  }, [selectLocation]);
+
+
   const handleChange = (e) => {
-    if (e.target.name === "name" || e.target.name === "email") {
-      setCustomerInfo({ ...customerInfo, [e.target.name]: e.target.value });
-      setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setCustomerInfo((customerInfo) => ({
+      ...customerInfo,
+      [name]: value,
+    }));
+    if (name === "location") {
+      setSelectLocation(value);
     }
-
-    if (e.target.name === "location") {
-      setSelectLocation(e.target.value);
-      setLocation(e.target.value);
-
-      const artistLocation = makeupArtist.find(
-        (artist) => artist.location === e.target.value
-      );
-
-      if (artistLocation) {
-        setSelectArtist(artistLocation.employee);
-        console.log(`artistLocation.employee: ${JSON.stringify(artistLocation)}`);
-      } else {
-        setSelectArtist({});
-      }
-    }
-    if (e.target.name === "artist") {
+    if (name === "artist") {
       const selectedArtist = selectArtist.find(
         (artist) => artist.name === e.target.value
       );
 
       setSelectedArtist(selectedArtist);
-      console.log(`selectedArtist in BookingForm: ${JSON.stringify(selectedArtist)}`);
+      console.log(`selectedArtist in Booking: ${JSON.stringify(selectedArtist)}`);
+      // console.log(`selectedArtist in Booking: ${(selectedArtist)}`);
     }
-  };
-
-  const handleSubmit = (e) => {
-    e.preventDefault();
   };
 
   return (
     <div>
       <BookingForm
-        form={form}
         selectArtist={selectArtist}
         selectLocation={selectLocation}
         handleChange={handleChange}
-        handleSubmit={handleSubmit}
+        customerInfo={customerInfo}
+        fetchedLocations={fetchedLocations}
       />
     </div>
   );

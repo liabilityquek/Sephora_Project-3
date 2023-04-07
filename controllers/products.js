@@ -12,25 +12,24 @@ const showProducts = async (req, res) => {
 
 const addProducts = async (req, res) => {
   try {
+    console.log(req.body);
+
     const productExists = await Products.findOne({ name: req.body.name });
     if (productExists) {
       throw new Error("Product with the same name already exists");
     }
 
-    let brand = req.body.brand;
-    if (brand === "Other") {
-      const newBrand = req.body.newBrands.trim();
-      const brandExists = await Products.findOne({ brand: newBrand });
+    if (req.body.brand === "Other") {
+      const brandExists = await Products.findOne({
+        brand: req.body.newBrand,
+      });
       if (brandExists) {
         throw new Error("Brand already exists");
       }
     }
 
-    const { newBrands, ...newProduct } = req.body; // Remove the newBrands field
-    newProduct.brand = brand; // Replace newBrands with brand if it's "Other"
-
-    const product = await Products.create(newProduct);
-    res.status(200).json(product);
+    const products = await Products.create(req.body);
+    res.status(200).json(products);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }

@@ -8,13 +8,13 @@ const Cal = ({ date, setDate, selectArtist, setShowTime }) => {
       };
 
     const getMinDate = (artist) => {
-        const startDate = artist.workingSchedule[0].startDate;
+        const startDate = artist.workingSchedule.startDate;
         // console.log(`minDate: ${startDate}`)
         return startDate;
       };
     
       const getMaxDate = (artist) => {
-        const endDate = artist.workingSchedule[0].endDate;
+        const endDate = artist.workingSchedule.endDate;
         // console.log(`maxDate: ${endDate}`)
         return endDate;
       };
@@ -26,10 +26,11 @@ const Cal = ({ date, setDate, selectArtist, setShowTime }) => {
           value={date}
           onClickDay={() => {
             setShowTime(true);
+            
           }}
           minDate={
             selectArtist && selectArtist.workingSchedule
-              ? new Date(getMinDate(selectArtist)) && todayDate()
+              ? new Date(Math.max(new Date(getMinDate(selectArtist)), todayDate()))
               : todayDate()
           }
           maxDate={
