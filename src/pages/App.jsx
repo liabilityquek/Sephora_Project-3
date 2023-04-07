@@ -89,6 +89,7 @@ function App() {
           path="/productpage/new"
           element={
             <AddProductsForm
+              products={products}
               addProduct={addProduct}
               category={category}
               brand={brand}
