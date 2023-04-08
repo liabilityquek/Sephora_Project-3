@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom';
 export default function ProductsPage({products,sortByCategory,category,setSortByCategory}) {
   const [sortedProducts, setSortedProducts] = useState([]);
   const [sortByPrice, setSortByPrice] = useState("");
- 
+  const [searchTerm, setSearchTerm] = useState("");
+
 
   useEffect(() => {
     let filteredProductsCopy = [...products];
@@ -17,14 +18,27 @@ export default function ProductsPage({products,sortByCategory,category,setSortBy
   } else if (sortByPrice === "highToLow") {
     filteredProductsCopy.sort((a, b) => b.price - a.price);
   }
+  if (searchTerm) {
+      filteredProductsCopy = filteredProductsCopy.filter((p) =>
+        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        p.brand.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+  }
   setSortedProducts(filteredProductsCopy);
-}, [sortByCategory, sortByPrice, products]);
+}, [searchTerm, sortByCategory, sortByPrice, products]);
 
+const handleSearchChange = (e) => {
+    setSearchTerm(e.target.value);
+  };
 
 
   return (
     <>
       <h1>Products Pages</h1>
+      <div>
+        <label>Search:</label>
+        <input type="text" value={searchTerm} onChange={handleSearchChange} />
+      </div>
       <div>
         <label>Sort by Price:</label>
         <select value={sortByPrice} onChange={(e) => setSortByPrice(e.target.value)}>

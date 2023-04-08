@@ -60,6 +60,10 @@ const Map = () => {
   }, [mapRef.current]);
 
   function getStreetViewImageUrl(lat, lng, radius) {
+    console.log(typeof lat)
+    console.log(typeof lng)
+    console.log(typeof radius, "radius", radius)
+
     const radiusParam = radius ? `&radius=${radius}` : '';
     const adjustedLat = lat + (Math.random() * radius * 2 - radius) * 0.0001;
     const adjustedLng = lng + (Math.random() * radius * 2 - radius) * 0.0001;
@@ -89,7 +93,8 @@ const Map = () => {
     function handleShowStreetView(location) {
       const radius = 50
       setStreetViewImageUrl(null)
-      getStreetViewImageUrl(location.latitude, location.longitude, radius);
+      getStreetViewImageUrl(Number(location.latitude), Number(location.longitude), radius);
+      console.log(getStreetViewImageUrl)
     }
 
   const handleNewLocation = () => {
@@ -142,7 +147,7 @@ const Map = () => {
       </Marker>
       </MapContainer>
       {/* <Location onNewLocation={handleNewLocation}/> */}
-      <Distance latitude={userLatitude} longitude={userLongitude} mapRef={mapRef}/>
+      <Distance latitude={userLatitude} longitude={userLongitude} mapRef={mapRef} handleResetMap={handleResetMap}/>
 
       <CurrentLocation setUserLatitude={setUserLatitude} setUserLongitude={setUserLongitude} />
       <button onClick={handleResetMap}>Reset Map</button>

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import axios from "axios";
+import L from "leaflet";
 
-export default function Distance({latitude,longitude, mapRef}) {
+export default function Distance({latitude,longitude, mapRef, handleResetMap}) {
 
     const [data, setData] = useState([]);
     const [error, setError] = useState(false);
@@ -47,8 +48,8 @@ export default function Distance({latitude,longitude, mapRef}) {
     });
 
     function handleZoom(location){
-      console.log(location)
-      mapRef.current.setView([location.latitude, location.longitude], 15)
+      // handleResetMap()
+      mapRef.current.flyTo([location.latitude, location.longitude], 15)
     }
 
   return (
