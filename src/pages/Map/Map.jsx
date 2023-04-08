@@ -3,13 +3,10 @@ import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
 import { Helmet } from 'react-helmet';
 import L from 'leaflet';
 import axios from 'axios';
-import { Link } from 'react-router-dom';
-import Location from '../../components/Location';
+import { Link } from 'react-router-dom'
+// import Location from '../../../components/location';
 import CurrentLocation from '../../components/currentLocation';
 import Distance from '../../components/Distance';
-import { useLoadScript } from '@react-google-maps/api';
-
-const googleAPIKey = "AIzaSyDDDJIzJGH2EKzuO21LzTsg6Hxiyq04Tc4";
 
 const blackIcon = new L.Icon({
   iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png',
@@ -31,25 +28,14 @@ const greenIcon = new L.Icon({
 
 const Map = () => {
   const [locations, setLocations] = useState([]);
-  const [userLatitude, setUserLatitude] = useState('');
-  const [userLongitude, setUserLongitude] = useState('');
-  const initialPosition = { lat: 1.3521, lng: 103.8198 };
+  const [userLatitude, setUserLatitude] = useState("");
+  const [userLongitude, setUserLongitude] = useState("");
+  const initialPosition = [1.3521, 103.8198];
   const initialZoom = 12;
   const [streetViewImageUrl, setStreetViewImageUrl] = useState('');
+  const [streetViewLocation, setStreetViewLocation] = useState(null);
   const [panorama, setPanorama] = useState(null);
   const mapRef = useRef();
-
-  const { isLoaded, loadError } = useLoadScript({
-    googleAPIKey,
-    libraries: [],
-  });
-
-  if (loadError) {
-    return <div>Error loading Google Maps API: {loadError.message}</div>;
-  } else if (!isLoaded) {
-    return <div>Loading Google Maps API...</div>;
-  }
-
   
   useEffect(() => {
     axios.get('/api/maps').then(response => {
@@ -59,17 +45,15 @@ const Map = () => {
     });
   }, []);
 
-
   useEffect(() => {
     // Create a StreetViewService object when the map is ready
     if (mapRef.current) {
-      const streetViewService = new window.google.maps.StreetViewService();
-
+      const streetViewService = new google.maps.StreetViewService();
       streetViewService.getPanorama({location: initialPosition}, (data, status) => {
         if (status === 'OK') {
           setPanorama(data.location.pano);
-        } else {
-          console.error('Street view request failed:', status);
+        } else{
+          console.error('Street view request failed:', status)
         }
       });
     }
@@ -84,23 +68,19 @@ const Map = () => {
     const heading = '210'; 
     const pitch = '10'; 
 
-    const { isLoaded, loadError } = useLoadScript({
-      googleAPIKey,
-      libraries: [], // You can include any required libraries here
-    });
-
     const location = new window.google.maps.LatLng(adjustedLat, adjustedLng);
     const streetViewService = new window.google.maps.StreetViewService();
-  
+    const apiKey = 'AIzaSyDDDJIzJGH2EKzuO21LzTsg6Hxiyq04Tc4';
+
     streetViewService.getPanorama({ location, radius }, (data, status) => {
       if (status === window.google.maps.StreetViewStatus.OK) {
         // Use the panorama ID to construct the street view image URL
         const panoId = data.location.pano;
-        const imageUrl = `${baseUrl}?size=${size}&pano=${panoId}&key=${googleAPIKey}`;
+        const imageUrl = `${baseUrl}?size=${size}&pano=${panoId}&key=${apiKey}`;
         setStreetViewImageUrl(imageUrl);
       } else {
         console.log(`No street view available for location: ${location}`);
-        const imageUrl = `${baseUrl}?size=${size}&location=${adjustedLat},${adjustedLng}&heading=${heading}&pitch=${pitch}&key=${googleAPIKey}${radiusParam}`;
+        const imageUrl = `${baseUrl}?size=${size}&location=${adjustedLat},${adjustedLng}&heading=${heading}&pitch=${pitch}&key=${apiKey}${radiusParam}`;
         setStreetViewImageUrl(imageUrl);
   
         }
@@ -121,11 +101,9 @@ const Map = () => {
   }
 
   const handleResetMap = () => {
-    if (mapRef.current) {
-      mapRef.current.setView(initialPosition, initialZoom);
-    }
-  };
-  
+    mapRef.current.setView(initialPosition, initialZoom);
+  }
+
   return (
     <div>
       <Helmet>
@@ -163,7 +141,7 @@ const Map = () => {
           </Popup>
       </Marker>
       </MapContainer>
-      <Location onNewLocation={handleNewLocation}/>
+      {/* <Location onNewLocation={handleNewLocation}/> */}
       <Distance latitude={userLatitude} longitude={userLongitude} mapRef={mapRef}/>
 
       <CurrentLocation setUserLatitude={setUserLatitude} setUserLongitude={setUserLongitude} />
