@@ -8,7 +8,7 @@ const UserSchema = new Schema({
     type: String,
     required: true,
     default: "CUSTOMER",
-    enum: ["PAdmin", "CUSTOMER", "BAdmin"],
+    enum: ["ADMIN", "CUSTOMER"],
   },
 });
 
