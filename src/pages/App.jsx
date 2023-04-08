@@ -119,7 +119,13 @@ export default function App() {
     },
   ];
 
-  const adminRouteConfig = [
+  const hrAdminRouteConfig = [
+    ...productsPageRoutes,
+    ...customerPagesRoutes,
+    //to add routes to admin pages only hr can access
+  ];
+
+  const opsAdminRouteConfig = [
     ...productsPageRoutes,
     ...customerPagesRoutes,
     {
@@ -160,12 +166,24 @@ export default function App() {
 
   const loggedInRoleSpecificRoutes = [
     {
-      role: "ADMIN",
+      role: "HRADMIN",
       content: (
         <Routes>
-          {adminRouteConfig.map((config) => (
-            <Route {...config} />
+          {hrAdminRouteConfig.map((config) => (
+            <Route key={config.path} {...config} />
           ))}
+          <Route key="*" path="*" element={accessDeniedComponent} />
+        </Routes>
+      ),
+    },
+    {
+      role: "OPSADMIN",
+      content: (
+        <Routes>
+          {opsAdminRouteConfig.map((config) => (
+            <Route key={config.path} {...config} />
+          ))}
+          <Route key="*" path="*" element={accessDeniedComponent} />
         </Routes>
       ),
     },
@@ -174,9 +192,9 @@ export default function App() {
       content: (
         <Routes>
           {customerPagesRoutes.map((config) => (
-            <Route {...config} />
+            <Route key={config.path} {...config} />
           ))}
-          <Route path="*" element={accessDeniedComponent} />
+          <Route key="*" path="*" element={accessDeniedComponent} />
         </Routes>
       ),
     },
@@ -194,17 +212,33 @@ export default function App() {
         <Route path="/admin/*" element={<Admin />} />
         <Route path="/makeupartist/:id/*" element={<MakeupArtist />} />
         {productsPageRoutes.map((config) => (
-          <Route {...config}></Route>
+          <Route key={config.path} {...config}></Route>
         ))}
         {customerPagesRoutes.map((config) => (
-          <Route path={config.path} element={<div>Please login</div>} />
+          <Route
+            key={config.path}
+            path={config.path}
+            element={<div>Please login</div>}
+          />
         ))}
-        {adminRouteConfig.map((config) => (
-          <Route path={config.path} element={accessDeniedComponent} />
+        {hrAdminRouteConfig.map((config) => (
+          <Route
+            key={config.path}
+            path={config.path}
+            element={accessDeniedComponent}
+          />
+        ))}
+        {opsAdminRouteConfig.map((config) => (
+          <Route
+            key={config.path}
+            path={config.path}
+            element={accessDeniedComponent}
+          />
         ))}
       </Routes>
     </React.Fragment>
   );
+  console.log("customer ", customer?.customer);
 
   return (
     <main className="App">

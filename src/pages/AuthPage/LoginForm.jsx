@@ -33,9 +33,12 @@ export default function LoginForm({ setUser }) {
       setUser(decoded);
       if (Name.customer.role === "CUSTOMER") {
         navigate("/");
-      } else if (Name.customer.role === "ADMIN") {
+      } else if (Name.customer.role === "OPSADMIN") {
         navigate("/productpage");
+      } else if (Name.customer.role === "HRADMIN") {
+        navigate("/");
       }
+
       console.log(decoded);
     } catch (error) {
       setError(error.message);

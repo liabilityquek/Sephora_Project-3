@@ -20,7 +20,7 @@ const customerSchema = new Schema({
     type: String,
     required: true,
     default: "CUSTOMER",
-    enum: ["ADMIN", "CUSTOMER"],
+    enum: ["HRADMIN", "CUSTOMER", "OPSADMIN"],
   },
 });
 
