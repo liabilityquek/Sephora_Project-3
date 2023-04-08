@@ -89,13 +89,19 @@ export default function InventoryAdd() {
         throw new Error(error.message || "Failed to add products");
       }
 
-      navigate("/adminlocation");
+      navigateBackToInventoryTable();
     } catch (error) {
       console.error("Failed to save changes:", error);
     }
   };
 
-  const handleCancel = (e) => {
+  const navigateBackToInventoryTable = () => {
+    navigate("/adminlocation", {
+      state: { locationName },
+    });
+  };
+
+  const handleReset = (e) => {
     e.preventDefault();
     console.log("clear");
     fetchProducts();
@@ -182,7 +188,8 @@ export default function InventoryAdd() {
         </table>
         <div>
           <button disabled={isSaveDisabled}>SAVE CHANGES</button>
-          <button onClick={handleCancel}>CLEAR</button>
+          <button onClick={handleReset}>CLEAR</button>
+          <button onClick={navigateBackToInventoryTable}>BACK</button>
         </div>
       </form>
     </div>

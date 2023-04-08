@@ -1,12 +1,16 @@
 import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import EditQuantityModal from "./EditQuantityModal/EditQuantityModal";
-import { useNavigate } from "react-router-dom";
 import "./InventoryTable.css";
 
 export default function () {
+  const { state } = useLocation();
+  const { locationName: locationNameFromInventoryAdd } = state;
   const navigate = useNavigate();
   const [locationsData, setLocationsData] = useState([]);
-  const [locationName, setLocationName] = useState("");
+  const [locationName, setLocationName] = useState(
+    locationNameFromInventoryAdd || ""
+  );
   const [conditions, setConditions] = useState({
     searchProductKeyword: "",
   });
