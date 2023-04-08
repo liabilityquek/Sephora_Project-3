@@ -1,30 +1,32 @@
-import React from "react";
-import "../index.css";
+import "@popperjs/core/dist/umd/popper.min.js";
 import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
-import "@popperjs/core/dist/umd/popper.min.js";
+import React from "react";
 import Header from "../components/Header/Header";
-import NavBar from "../components/NavBar";
-import AppointmentPage from "./Appoinments/AppointmentPage";
-import Map from "./Map/Map";
-import SignUpForm from "./AuthPage/SignUpForm";
-import UpcomingAppointment from "./UpcomingAppointment/UpcomingAppointment";
-import Admin from "./MakeupAdmin/Admin";
-import MakeupArtist from "./MakeupAdmin/MakeupArtist";
-import Edit from "./MakeupAdmin/Edit";
-import AuthPage from "./AuthPage/AuthPage";
+import NavBarNew from "../components/NavBarNew/NavBarNew";
+import "../index.css";
 import { getUser } from "../utilities/users-service";
+import AppointmentPage from "./Appoinments/AppointmentPage";
+import Admin from "./MakeupAdmin/Admin";
+import Edit from "./MakeupAdmin/Edit";
+import MakeupArtist from "./MakeupAdmin/MakeupArtist";
+import Map from "./Map/Map";
+import UpcomingAppointment from "./UpcomingAppointment/UpcomingAppointment";
 
+import InventoryAdd from "./InventoryAdd/InventoryAdd";
+import InventoryManagement from "./InventoryManagement/InventoryManagement";
+import ProductsPage from "./Products/ProductsPage";
 import SelectedProductPage from "./Products/SelectedProductPage";
 import AddProductsForm from "./ProductsForm/AddProductsForm";
-import InventoryManagement from "./InventoryManagement/InventoryManagement";
-import InventoryAdd from "./InventoryAdd/InventoryAdd";
 import EditProductsForm from "./ProductsForm/EditProductsForm";
 import ProductsForm from "./ProductsForm/ProductsForm";
-import ProductsPage from "./Products/ProductsPage";
 
-import { Routes, Route } from "react-router";
 import { useEffect, useState } from "react";
+import { Route, Routes } from "react-router";
+import ForgetPassword from "./AuthPage/ForgetPassword";
+import SignUpForm from "./AuthPage/SignUpForm";
+import Banners from "../components/Banners";
+import LoginForm from "./AuthPage/LoginForm";
 
 export default function App() {
   const [user, setUser] = useState(getUser());
@@ -69,6 +71,21 @@ export default function App() {
       .then((data) => setProducts(data))
       .catch((error) => console.error(error));
   }, []);
+
+  const loginRoutes = [
+    {
+      path: "/login",
+      element: <LoginForm setUser={setUser} />,
+    },
+    {
+      path: "/signup",
+      element: <SignUpForm />,
+    },
+    {
+      path: "/forgetpassword",
+      element: <ForgetPassword />,
+    },
+  ];
 
   const productsPageRoutes = [
     {
@@ -206,8 +223,10 @@ export default function App() {
 
   const renderUnauthenticatedPages = () => (
     <React.Fragment>
-      <AuthPage setUser={setUser} />
       <Routes>
+        {loginRoutes.map((config) => (
+          <Route {...config} />
+        ))}
         <Route path="/maps" element={<Map />} />
         <Route path="/admin/*" element={<Admin />} />
         <Route path="/makeupartist/:id/*" element={<MakeupArtist />} />
@@ -242,8 +261,12 @@ export default function App() {
 
   return (
     <main className="App">
-      <Header />
-      <NavBar setUser={setUser} />
+      <Header
+        setUser={setUser}
+        customer={customer ? customer.customer : null}
+      />
+      <Banners></Banners>
+      <NavBarNew />
       {customer
         ? renderAuthenticatedPages(customer.customer)
         : renderUnauthenticatedPages()}

@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { getUser } from "../../utilities/users-service";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginForm({ setUser }) {
   const navigate = useNavigate();
@@ -76,6 +76,9 @@ export default function LoginForm({ setUser }) {
               />
             </label>
             <button>Login</button>
+            <Link to="/forgetpassword">
+              <button>Forget Password</button>
+            </Link>
           </fieldset>
         </form>
       </div>

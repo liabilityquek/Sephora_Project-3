@@ -1,36 +1,41 @@
 import { useEffect, useState } from "react";
-import { Link } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
-
-export default function ProductsPage({products,sortByCategory,category,setSortByCategory}) {
+export default function ProductsPage({
+  products,
+  sortByCategory,
+  category,
+  setSortByCategory,
+}) {
   const [sortedProducts, setSortedProducts] = useState([]);
   const [sortByPrice, setSortByPrice] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
-
   useEffect(() => {
     let filteredProductsCopy = [...products];
-  if (sortByCategory) {
-    filteredProductsCopy = filteredProductsCopy.filter((p) => p.category === sortByCategory);
-  }
-  if (sortByPrice === "lowToHigh") {
-    filteredProductsCopy.sort((a, b) => a.price - b.price);
-  } else if (sortByPrice === "highToLow") {
-    filteredProductsCopy.sort((a, b) => b.price - a.price);
-  }
-  if (searchTerm) {
-      filteredProductsCopy = filteredProductsCopy.filter((p) =>
-        p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-        p.brand.toLowerCase().includes(searchTerm.toLowerCase())
+    if (sortByCategory) {
+      filteredProductsCopy = filteredProductsCopy.filter(
+        (p) => p.category === sortByCategory
       );
-  }
-  setSortedProducts(filteredProductsCopy);
-}, [searchTerm, sortByCategory, sortByPrice, products]);
+    }
+    if (sortByPrice === "lowToHigh") {
+      filteredProductsCopy.sort((a, b) => a.price - b.price);
+    } else if (sortByPrice === "highToLow") {
+      filteredProductsCopy.sort((a, b) => b.price - a.price);
+    }
+    if (searchTerm) {
+      filteredProductsCopy = filteredProductsCopy.filter(
+        (p) =>
+          p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+          p.brand.toLowerCase().includes(searchTerm.toLowerCase())
+      );
+    }
+    setSortedProducts(filteredProductsCopy);
+  }, [searchTerm, sortByCategory, sortByPrice, products]);
 
-const handleSearchChange = (e) => {
+  const handleSearchChange = (e) => {
     setSearchTerm(e.target.value);
   };
-
 
   return (
     <>
@@ -41,24 +46,32 @@ const handleSearchChange = (e) => {
       </div>
       <div>
         <label>Sort by Price:</label>
-        <select value={sortByPrice} onChange={(e) => setSortByPrice(e.target.value)}>
+        <select
+          value={sortByPrice}
+          onChange={(e) => setSortByPrice(e.target.value)}
+        >
           <option value="">All Products</option>
           <option value="lowToHigh">Low to high</option>
           <option value="highToLow">High to low</option>
         </select>
       </div>
-       <div>
+      <div>
         <label>Sort by categories:</label>
-        <select value={sortByCategory} onChange={(e) => setSortByCategory(e.target.value)}>
-           <option value="">All categories</option>
-          {category.map((c,i) => (
-            <option key={i} value={c}>{c}</option>
+        <select
+          value={sortByCategory}
+          onChange={(e) => setSortByCategory(e.target.value)}
+        >
+          <option value="">All categories</option>
+          {category.map((c, i) => (
+            <option key={i} value={c}>
+              {c}
+            </option>
           ))}
         </select>
       </div>
       <div className="productsDiv">
         {sortedProducts.map((p) => (
-          <div key={p._id}>
+          <div className="productCard" key={p._id}>
             <Link to={`/products/${p.name}`}>
               <img className="productsPic" src={p.imgurl} alt={p.name} />
               <br></br>
@@ -66,7 +79,12 @@ const handleSearchChange = (e) => {
               <br></br>
               <label>{p.name}</label>
               <br></br>
-              <label>{(p.price / 100).toLocaleString("en-US", { style: "currency", currency: "SGD" })}</label>
+              <label>
+                {(p.price / 100).toLocaleString("en-US", {
+                  style: "currency",
+                  currency: "SGD",
+                })}
+              </label>
             </Link>
           </div>
         ))}

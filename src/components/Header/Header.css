@@ -7,3 +7,23 @@
   text-decoration: underline !important;
   color: black !important;
 }
+
+.dropdown-menu.right {
+  right: 0;
+  left: unset;
+}
+
+.nav-link.active {
+  text-decoration: underline !important;
+  background-color: transparent !important;
+}
+
+.container-fluid {
+  width: 1125px;
+}
+
+.stickyNavBar {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}

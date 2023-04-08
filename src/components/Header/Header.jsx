@@ -1,12 +1,26 @@
 import React from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import "./Header.css";
+import { logout } from "../../utilities/users-service";
 
-export default function Header() {
-  const isSignedIn = false; // Replace with your logic for checking if the user is signed in
+export default function Header({ setUser, customer }) {
+  const isSignedIn = customer; // Replace with your logic for checking if the user is signed in
+  // const token = localStorage.getItem("token");
+  // const Name = token ? JSON.parse(window.atob(token.split(".")[1])) : null;
+  // const customerName = Name && Name.customer.name ? Name.customer.name : "";
+  const navigate = useNavigate();
+  const location = useLocation();
+  const { role } = customer || {};
+
+  const handleLogout = (e) => {
+    e.preventDefault();
+    setUser(null);
+    logout();
+    navigate("/login");
+  };
 
   return (
-    <nav className="navbar navbar-expand-lg navbar-dark bg-dark">
+    <nav className="stickyNavBar navbar navbar-expand-lg navbar-dark bg-dark">
       <div className="container-fluid">
         <button
           className="navbar-toggler"
@@ -20,60 +34,127 @@ export default function Header() {
           <span className="navbar-toggler-icon"></span>
         </button>
         <div className="collapse navbar-collapse" id="navbarNav">
-          <ul className="navbar-nav me-auto mb-2 mb-lg-0 align-items-center">
-            <li className="nav-item">
-              <Link className="nav-link border-end text-white" to="/my-account">
-                My Account
-              </Link>
-            </li>
-            <li className="nav-item dropdown">
-              <a
-                className="nav-link dropdown-toggle text-white"
-                href="#"
-                id="navbarDropdownMenuLink"
-                role="button"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
-                Admin Tools
-              </a>
-              <ul
-                className="dropdown-menu"
-                aria-labelledby="navbarDropdownMenuLink"
-              >
-                <li>
-                  <Link className="dropdown-item" to="/productpage">
-                    Product Portfolio
+          <ul className="navbar-nav me-auto align-items-center my-auto">
+            {!isSignedIn && (
+              <React.Fragment>
+                <li className="nav-item">
+                  <Link
+                    className={`nav-link text-white ${
+                      location.pathname === "/login" ? "active" : ""
+                    }`}
+                    to="/login"
+                  >
+                    Sign In
                   </Link>
                 </li>
-                <li>
-                  <Link className="dropdown-item" to="/adminlocation">
-                    Inventory Management
+                <li className="nav-item">
+                  <Link
+                    className={`nav-link text-white ${
+                      location.pathname === "/signup" ? "active" : ""
+                    }`}
+                    to="/signup"
+                  >
+                    Register
                   </Link>
                 </li>
-                <li>
-                  <Link className="dropdown-item" to="/staff-scheduling">
-                    Staff Scheduling
-                  </Link>
-                </li>
-              </ul>
-            </li>
-          </ul>
-          <ul className="navbar-nav">
-            {isSignedIn ? (
+              </React.Fragment>
+            )}
+            {!!customer && (
               <li className="nav-item">
-                <Link className="nav-link text-white" to="/sign-out">
-                  Sign Out
-                </Link>
-              </li>
-            ) : (
-              <li className="nav-item">
-                <Link className="nav-link text-white" to="/sign-in">
-                  Sign In
-                </Link>
+                <div
+                  style={{
+                    color: "white",
+                    paddingRight: "0.5rem",
+                    paddingLeft: "0.5rem",
+                  }}
+                >
+                  Hello,{" "}
+                  <em style={{ fontStyle: "italic" }}>{customer.name}</em>
+                </div>
               </li>
             )}
           </ul>
+          {isSignedIn && (
+            <ul className="navbar-nav">
+              {["CUSTOMER"].includes(role) && (
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle text-white"
+                    id="navbarDropdownMenuLink"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    My Account
+                  </a>
+                  <ul
+                    className="dropdown-menu right"
+                    aria-labelledby="navbarDropdownMenuLink"
+                  >
+                    <li>
+                      <Link className="dropdown-item" to="/history">
+                        Upcoming Appointments
+                      </Link>
+                    </li>
+                    <li>
+                      <a className="dropdown-item" onClick={handleLogout}>
+                        Logout
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              )}
+              {["OPSADMIN", "HRADMIN"].includes(role) && (
+                <li className="nav-item dropdown">
+                  <a
+                    className="nav-link dropdown-toggle text-white"
+                    id="navbarDropdownMenuLink"
+                    role="button"
+                    data-bs-toggle="dropdown"
+                    aria-expanded="false"
+                  >
+                    Admin Tools
+                  </a>
+                  <ul
+                    className="dropdown-menu right"
+                    aria-labelledby="navbarDropdownMenuLink"
+                  >
+                    {role === "OPSADMIN" && (
+                      <React.Fragment>
+                        <li>
+                          <Link className="dropdown-item" to="/productpage">
+                            Product Portfolio
+                          </Link>
+                        </li>
+                        <li>
+                          <Link className="dropdown-item" to="/adminlocation">
+                            Inventory Management
+                          </Link>
+                        </li>
+                      </React.Fragment>
+                    )}
+                    {role === "HRADMIN" && (
+                      <React.Fragment>
+                        <li>
+                          <Link
+                            className="dropdown-item"
+                            to="/staff-scheduling"
+                          >
+                            Staff Scheduling
+                          </Link>
+                        </li>
+                      </React.Fragment>
+                    )}
+                    <li>
+                      <a className="dropdown-item" onClick={handleLogout}>
+                        Logout
+                      </a>
+                    </li>
+                  </ul>
+                </li>
+              )}
+            </ul>
+          )}
         </div>
       </div>
     </nav>
