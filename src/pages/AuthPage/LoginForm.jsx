@@ -25,14 +25,18 @@ export default function LoginForm({ setUser }) {
       if (!response.ok) {
         throw new Error(data.error || "Network error");
       }
-      localStorage.setItem("token",  JSON.stringify(data.token));
-      const decoded = getUser()
-      const Name =  JSON.parse(window.atob(data.token.split(".")[1]))
-      console.log(Name.customer.name)
-      console.log(Name.customer.email)
+      localStorage.setItem("token", JSON.stringify(data.token));
+      const decoded = getUser();
+      const Name = JSON.parse(window.atob(data.token.split(".")[1]));
+      console.log(Name.customer.name);
+      console.log(Name.customer.email);
       setUser(decoded);
-      navigate("/");
-      console.log(decoded)
+      if (Name.customer.role === "CUSTOMER") {
+        navigate("/");
+      } else if (Name.customer.role === "ADMIN") {
+        navigate("/productpage");
+      }
+      console.log(decoded);
     } catch (error) {
       setError(error.message);
     }
@@ -53,7 +57,11 @@ export default function LoginForm({ setUser }) {
             <legend>Login</legend>
             <label>
               Email:
-              <input name="email" value={loginTry.email} onChange={handleChange} />
+              <input
+                name="email"
+                value={loginTry.email}
+                onChange={handleChange}
+              />
             </label>
             <label>
               Password:{" "}

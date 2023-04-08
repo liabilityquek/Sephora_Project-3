@@ -32,6 +32,8 @@ export default function App() {
   const [sortByCategory, setSortByCategory] = useState("");
   const [category, setCategory] = useState([]);
   const [brand, setBrand] = useState([]);
+  const token = localStorage.getItem("token");
+  const customer = token ? JSON.parse(window.atob(token.split(".")[1])) : null;
 
   const addProduct = (product, error) => {
     if (error) {
@@ -78,14 +80,6 @@ export default function App() {
           <Route path="/maps" element={<Map />} />
           <Route path="/admin/*" element={<Admin />} />
           <Route path="/makeupartist/:id/*" element={<MakeupArtist />} />
-        </Routes>
-      </main>
-    );
-  } else {
-    return (
-      <main className="App">
-        <NavBar setUser={setUser} />
-        <Routes>
           <Route
             path="/"
             element={
@@ -101,6 +95,14 @@ export default function App() {
             path="/products/:productName"
             element={<SelectedProductPage products={products} />}
           />
+        </Routes>
+      </main>
+    );
+  } else if (customer.customer.role === "ADMIN") {
+    return (
+      <main className="App">
+        <NavBar setUser={setUser} />
+        <Routes>
           <Route
             path="/productpage"
             element={
@@ -131,7 +133,29 @@ export default function App() {
           />
           <Route path="/adminlocation" element={<InventoryManagement />} />
           <Route path="/adminlocation/edit" element={<InventoryAdd />} />
-
+        </Routes>
+      </main>
+    );
+  } else if (customer.customer.role === "CUSTOMER") {
+    return (
+      <main className="App">
+        <NavBar setUser={setUser} />
+        <Routes>
+          <Route
+            path="/"
+            element={
+              <ProductsPage
+                products={products}
+                category={category}
+                sortByCategory={sortByCategory}
+                setSortByCategory={setSortByCategory}
+              />
+            }
+          />
+          <Route
+            path="/products/:productName"
+            element={<SelectedProductPage products={products} />}
+          />
           <Route path="/maps" element={<Map />} />
           <Route path="/booking" element={<AppointmentPage />} />
           <Route path="/history" element={<UpcomingAppointment />} />
