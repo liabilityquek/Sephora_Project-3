@@ -109,9 +109,16 @@ const deleteLocProduct = async (req, res) => {
 const editLocProductQty = async (req, res) => {
   try {
     console.log("edit location quantity");
-    const locationId = req.params.locationId; // get location id
-    const productId = req.params.productId; // get the product id
-    const newProductQty = req.body.productQty; // get the new quantity
+    const locationId = req.params.locationId;
+    const productId = req.params.productId;
+    const newProductQty = req.body.productQty;
+
+    // Check that the new product quantity is not negative
+    if (newProductQty < 0) {
+      return res
+        .status(400)
+        .json({ error: "Product quantity cannot be negative" });
+    }
 
     const location = await Location.findById(locationId);
 
@@ -165,10 +172,12 @@ const addLocProduct = async (req, res) => {
 
     //check all product has quantity
     const hasMissingQuantity = productsToAdd.some(
-      (product) => !product.productQty
+      (product) => !product.productQty || product.productQty < 0
     );
     if (hasMissingQuantity) {
-      throw new Error("All selected products must have a quantity entered.");
+      throw new Error(
+        "All selected products must have a non-negative quantity entered."
+      );
     }
 
     // Check if selected products already exist in the location
