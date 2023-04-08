@@ -52,7 +52,7 @@ export default function Header() {
                   </Link>
                 </li>
                 <li>
-                  <Link className="dropdown-item" to="/staff-scheduling">
+                  <Link className="dropdown-item" to="/admin">
                     Staff Scheduling
                   </Link>
                 </li>

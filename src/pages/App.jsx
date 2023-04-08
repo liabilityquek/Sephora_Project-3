@@ -11,6 +11,7 @@ import SignUpForm from "./AuthPage/SignUpForm";
 import UpcomingAppointment from "./UpcomingAppointment/UpcomingAppointment";
 import Admin from "./MakeupAdmin/Admin";
 import MakeupArtist from "./MakeupAdmin/MakeupArtist";
+import NewArtist from "./MakeupAdmin/NewArtist";
 import Edit from "./MakeupAdmin/Edit";
 import AuthPage from "./AuthPage/AuthPage";
 import { getUser } from "../utilities/users-service";
@@ -139,6 +140,8 @@ export default function App() {
           <Route path="/admin/*" element={<Admin />} />
           <Route path="/makeupartist/:id/*" element={<MakeupArtist />} />
           <Route path={`/makeupartist/edit/:id`} element={<Edit />} />
+          <Route path="/newmakeupartist" element={<NewArtist />} />
+
         </Routes>
       </main>
     );

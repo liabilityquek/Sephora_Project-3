@@ -1,28 +1,33 @@
 import { useParams, Link, Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Edit from './Edit'
+const token = localStorage.getItem("token");
 
 export default function MakeupArtist() {
     const [ appointments, setAppointments] = useState([])
     const {id} = useParams();
 
-    useEffect(()=>{
-        async function fetchAppointments(){
-        try{
-            const response = await fetch(`/api/makeupartist/admin/${id}`);
-            if(!response.ok){
-                throw new Error("Failed to fetch appointments");
-            }
-            const data = await response.json();
-            setAppointments(data);
-        } catch (error){
-            console.error("Error fetching appointments:" , error)
-        }}
-        fetchAppointments()
-    },[id])
-
+    useEffect(() => {
+      async function fetchAppointments() {
+        try {
+          const response = await fetch(`/api/makeupartist/admin/${id}`, {
+            headers: {
+              "Content-Type": "application/json",
+              "Authorization": `Bearer ${token}`,
+            },
+          });
+          if (!response.ok) {
+            throw new Error("Failed to fetch appointments");
+          }
+          const data = await response.json();
+          setAppointments(data);
+        } catch (error) {
+          console.error("Error fetching appointments:", error);
+        }
+      }
+      fetchAppointments();
+    }, [id]);
     
-
     console.log(appointments)
 
     return (

@@ -109,6 +109,9 @@ const Map = () => {
     mapRef.current.setView(initialPosition, initialZoom);
   }
 
+  console.log(userLatitude)
+  console.log(userLongitude)
+
   return (
     <div>
       <Helmet>
@@ -138,7 +141,7 @@ const Map = () => {
             </Popup>
           </Marker>
         ))}
-      <Marker position={[userLatitude, userLongitude]} icon={greenIcon}>
+      <Marker position={[Number(userLatitude), Number(userLongitude)]} icon={greenIcon}>
           <Popup>
               <div>
                   <b>Your current location</b>
