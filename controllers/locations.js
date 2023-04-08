@@ -40,9 +40,40 @@ const findLocationByProductName = async (req, res) => {
 
 const showLocation = async (req, res) => {
   try {
-    const locations = await Location.find({})
-      .populate("products.productDetails")
-      .sort({ name: 1 });
+    const locations = await Location.aggregate([
+      {
+        $unwind: "$products",
+      },
+      {
+        $lookup: {
+          from: "products",
+          localField: "products.productDetails",
+          foreignField: "_id",
+          as: "products.productDetails",
+        },
+      },
+      {
+        $unwind: "$products.productDetails",
+      },
+      {
+        $sort: {
+          "products.productDetails.name": 1,
+          name: 1,
+        },
+      },
+      {
+        $group: {
+          _id: "$_id",
+          name: { $first: "$name" },
+          latitude: { $first: "$latitude" },
+          longitude: { $first: "$longitude" },
+          createdAt: { $first: "$createdAt" },
+          updatedAt: { $first: "$updatedAt" },
+          __v: { $first: "$__v" },
+          products: { $push: "$products" },
+        },
+      },
+    ]);
     res.status(200).json(locations);
   } catch (error) {
     res.status(400).json({ error: error.message });
