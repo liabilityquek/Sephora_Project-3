@@ -5,12 +5,9 @@ import "./InventoryTable.css";
 
 export default function () {
   const { state } = useLocation();
-  const { locationName: locationNameFromInventoryAdd } = state;
   const navigate = useNavigate();
   const [locationsData, setLocationsData] = useState([]);
-  const [locationName, setLocationName] = useState(
-    locationNameFromInventoryAdd || ""
-  );
+  const [locationName, setLocationName] = useState(state?.locationName || "");
   const [conditions, setConditions] = useState({
     searchProductKeyword: "",
   });
