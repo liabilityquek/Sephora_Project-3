@@ -70,101 +70,159 @@ export default function App() {
       .catch((error) => console.error(error));
   }, []);
 
-  if (user === null) {
-    return (
-      <main className="App">
-        <Header />
-        <NavBar setUser={setUser} />
-        <AuthPage setUser={setUser} />
+  const productsPageRoutes = [
+    {
+      path: "/",
+      element: (
+        <ProductsPage
+          products={products}
+          category={category}
+          sortByCategory={sortByCategory}
+          setSortByCategory={setSortByCategory}
+        />
+      ),
+    },
+    {
+      path: "/products/:productName",
+      element: <SelectedProductPage products={products} />,
+    },
+  ];
+
+  const accessDeniedComponent = <div>Access denied</div>;
+
+  const customerPagesRoutes = [
+    ...productsPageRoutes,
+    {
+      path: "/maps",
+      element: <Map />,
+    },
+    {
+      path: "/booking",
+      element: <AppointmentPage />,
+    },
+    {
+      path: "/history",
+      element: <UpcomingAppointment />,
+    },
+
+    {
+      path: "/admin/*",
+      element: <Admin />,
+    },
+    {
+      path: "/makeupartist/:id/*",
+      element: <MakeupArtist />,
+    },
+    {
+      path: "/makeupartist/edit/:id",
+      element: <Edit />,
+    },
+  ];
+
+  const adminRouteConfig = [
+    ...productsPageRoutes,
+    ...customerPagesRoutes,
+    {
+      path: "/productpage",
+      element: <ProductsForm products={products} delProduct={delProduct} />,
+    },
+    {
+      path: "/productpage/new",
+      element: (
+        <AddProductsForm
+          products={products}
+          addProduct={addProduct}
+          category={category}
+          brand={brand}
+        />
+      ),
+    },
+    {
+      path: "/productpage/products/:productID/edit",
+      element: (
+        <EditProductsForm
+          products={products}
+          category={category}
+          brand={brand}
+          handleEditProduct={handleEditProduct}
+        />
+      ),
+    },
+    {
+      path: "/adminlocation",
+      element: <InventoryManagement />,
+    },
+    {
+      path: "/adminlocation/edit",
+      element: <InventoryAdd />,
+    },
+  ];
+
+  const loggedInRoleSpecificRoutes = [
+    {
+      role: "ADMIN",
+      content: (
         <Routes>
-          <Route path="/maps" element={<Map />} />
-          <Route path="/admin/*" element={<Admin />} />
-          <Route path="/makeupartist/:id/*" element={<MakeupArtist />} />
-          <Route
-            path="/"
-            element={
-              <ProductsPage
-                products={products}
-                category={category}
-                sortByCategory={sortByCategory}
-                setSortByCategory={setSortByCategory}
-              />
-            }
-          />
-          <Route
-            path="/products/:productName"
-            element={<SelectedProductPage products={products} />}
-          />
+          {adminRouteConfig.map((config) => (
+            <Route {...config} />
+          ))}
         </Routes>
-      </main>
-    );
-  } else if (customer.customer.role === "ADMIN") {
-    return (
-      <main className="App">
-        <NavBar setUser={setUser} />
+      ),
+    },
+    {
+      role: "CUSTOMER",
+      content: (
         <Routes>
-          <Route
-            path="/productpage"
-            element={
-              <ProductsForm products={products} delProduct={delProduct} />
-            }
-          />
-          <Route
-            path="/productpage/new"
-            element={
-              <AddProductsForm
-                products={products}
-                addProduct={addProduct}
-                category={category}
-                brand={brand}
-              />
-            }
-          />
-          <Route
-            path="/productpage/products/:productID/edit"
-            element={
-              <EditProductsForm
-                products={products}
-                category={category}
-                brand={brand}
-                handleEditProduct={handleEditProduct}
-              />
-            }
-          />
-          <Route path="/adminlocation" element={<InventoryManagement />} />
-          <Route path="/adminlocation/edit" element={<InventoryAdd />} />
+          {customerPagesRoutes.map((config) => (
+            <Route {...config} />
+          ))}
+          <Route path="*" element={accessDeniedComponent} />
         </Routes>
-      </main>
-    );
-  } else if (customer.customer.role === "CUSTOMER") {
-    return (
-      <main className="App">
-        <NavBar setUser={setUser} />
-        <Routes>
-          <Route
-            path="/"
-            element={
-              <ProductsPage
-                products={products}
-                category={category}
-                sortByCategory={sortByCategory}
-                setSortByCategory={setSortByCategory}
-              />
-            }
-          />
-          <Route
-            path="/products/:productName"
-            element={<SelectedProductPage products={products} />}
-          />
-          <Route path="/maps" element={<Map />} />
-          <Route path="/booking" element={<AppointmentPage />} />
-          <Route path="/history" element={<UpcomingAppointment />} />
-          <Route path="/signup" element={<SignUpForm />} />
-          <Route path="/admin/*" element={<Admin />} />
-          <Route path="/makeupartist/:id/*" element={<MakeupArtist />} />
-          <Route path={`/makeupartist/edit/:id`} element={<Edit />} />
-        </Routes>
-      </main>
-    );
-  }
+      ),
+    },
+  ];
+
+  const renderLoggedIn = (cust) =>
+    loggedInRoleSpecificRoutes.find((config) => config.role === cust.role)
+      ?.content;
+
+  const renderNotLoggedIn = () => (
+    <React.Fragment>
+      <AuthPage setUser={setUser} />
+      <Routes>
+        <Route path="/maps" element={<Map />} />
+        <Route path="/admin/*" element={<Admin />} />
+        <Route path="/makeupartist/:id/*" element={<MakeupArtist />} />
+        <Route
+          path="/"
+          element={
+            <ProductsPage
+              products={products}
+              category={category}
+              sortByCategory={sortByCategory}
+              setSortByCategory={setSortByCategory}
+            />
+          }
+        />
+        <Route
+          path="/products/:productName"
+          element={<SelectedProductPage products={products} />}
+        />
+        {customerPagesRoutes.map((config) => (
+          <Route path={config.path} element={<div>Please login</div>} />
+        ))}
+        {adminRouteConfig.map((config) => (
+          <Route path={config.path} element={accessDeniedComponent} />
+        ))}
+      </Routes>
+    </React.Fragment>
+  );
+
+  return (
+    <main className="App">
+      <Header />
+      <NavBar setUser={setUser} />
+      {customer ? renderLoggedIn(customer.customer) : renderNotLoggedIn()}
+    </main>
+  );
 }

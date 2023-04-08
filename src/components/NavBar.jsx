@@ -2,8 +2,8 @@ import { NavLink, useNavigate } from "react-router-dom";
 import { logout } from "../utilities/users-service";
 
 export default function NavBar({ setUser }) {
-  const token = localStorage.getItem("token")
-  const Name =  token ? JSON.parse(window.atob(token.split(".")[1])) : null;
+  const token = localStorage.getItem("token");
+  const Name = token ? JSON.parse(window.atob(token.split(".")[1])) : null;
   const customerName = Name && Name.customer.name ? Name.customer.name : "";
   const navigate = useNavigate();
 
