@@ -182,32 +182,20 @@ export default function App() {
     },
   ];
 
-  const renderLoggedIn = (cust) =>
+  const renderAuthenticatedPages = (cust) =>
     loggedInRoleSpecificRoutes.find((config) => config.role === cust.role)
       ?.content;
 
-  const renderNotLoggedIn = () => (
+  const renderUnauthenticatedPages = () => (
     <React.Fragment>
       <AuthPage setUser={setUser} />
       <Routes>
         <Route path="/maps" element={<Map />} />
         <Route path="/admin/*" element={<Admin />} />
         <Route path="/makeupartist/:id/*" element={<MakeupArtist />} />
-        <Route
-          path="/"
-          element={
-            <ProductsPage
-              products={products}
-              category={category}
-              sortByCategory={sortByCategory}
-              setSortByCategory={setSortByCategory}
-            />
-          }
-        />
-        <Route
-          path="/products/:productName"
-          element={<SelectedProductPage products={products} />}
-        />
+        {productsPageRoutes.map((config) => (
+          <Route {...config}></Route>
+        ))}
         {customerPagesRoutes.map((config) => (
           <Route path={config.path} element={<div>Please login</div>} />
         ))}
@@ -222,7 +210,9 @@ export default function App() {
     <main className="App">
       <Header />
       <NavBar setUser={setUser} />
-      {customer ? renderLoggedIn(customer.customer) : renderNotLoggedIn()}
+      {customer
+        ? renderAuthenticatedPages(customer.customer)
+        : renderUnauthenticatedPages()}
     </main>
   );
 }
