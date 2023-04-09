@@ -6,7 +6,7 @@ Sephora is a premier beauty and cosmetics retailer with a strong online presence
 
 ### Deployment
 
----
+https://sephora.cyclic.app/
 
 ## Timeframe
 
@@ -30,7 +30,7 @@ Sephora is a premier beauty and cosmetics retailer with a strong online presence
 
 ## Model
 
-![model](https://https://github.com/beryln-t/sephora/blob/main/assets/readmeAssetes/datamodel.png?raw=true)
+![model](https://github.com/beryln-t/sephora/blob/jeremy/src/assets/readmeAssets/datamodel.png?raw=true)
 
 ## CRUD
 
@@ -115,13 +115,42 @@ const updateProducts = async (req, res) => {
 ### Show Something
 
 ```javascript
+const show = async (req, res) => {
+  const { id } = req.params;
 
+  try {
+    const mkaeupArtist = await MakeupArtist.find({ _id: id }).populate(
+      "location.id"
+    );
+    res.status(200).json(mkaeupArtist);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 ```
 
 ### Delete Something
 
 ```javascript
+const deleteMakeupArtist = async (req, res) => {
+  const { id } = req.params;
+  console.log(id);
 
+  try {
+    await Appointment.deleteMany({ "makeupArtist.id": id });
+
+    // Find and delete the makeup artist
+    const findMakeUpArtist = await MakeupArtist.findByIdAndDelete(id);
+
+    if (!findMakeUpArtist) {
+      return res.status(404).json({ error: "Makeup Artist not found" });
+    }
+
+    res.status(200).json({ message: "Makeup Artist deleted successfully" });
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
 ```
 
 ## Key Learning

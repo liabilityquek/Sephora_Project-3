@@ -14,8 +14,14 @@ export default function () {
   const [selectedLocationData, setSelectedLocationData] = useState(null);
 
   const initalizeLocationsData = async () => {
+    const token = localStorage.getItem("token");
     try {
-      const response = await fetch("/api/locations");
+      const response = await fetch("/api/locations", {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
       const data = await response.json();
       setLocationsData(data);
       if (locationName) {
@@ -47,11 +53,15 @@ export default function () {
   };
 
   const handleDelete = async (locationId, productId) => {
+    const token = localStorage.getItem("token");
     try {
       const response = await fetch(
         `/api/locations/${locationId}/products/${productId}`,
         {
           method: "DELETE",
+          headers: {
+            Authorization: "Bearer " + token,
+          },
         }
       );
 
@@ -67,6 +77,7 @@ export default function () {
   };
 
   const renderTableContent = () => {
+    const token = localStorage.getItem("token");
     if (!selectedLocationData) return null;
 
     const keyword = conditions.searchProductKeyword.toLowerCase().trim();
@@ -102,6 +113,7 @@ export default function () {
                         method: "PUT",
                         headers: {
                           "Content-Type": "application/json",
+                          Authorization: "Bearer " + token,
                         },
                         body: JSON.stringify({
                           productQty: newProductQty,

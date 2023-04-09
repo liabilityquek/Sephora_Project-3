@@ -13,8 +13,14 @@ export default function InventoryAdd() {
   const navigate = useNavigate(); // Initialize the navigate object
 
   const fetchProducts = async () => {
+    const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`/api/locations/getlocation/${locationId}`);
+      const response = await fetch(`/api/locations/getlocation/${locationId}`, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
       const { newProducts } = await response.json();
       setProductList(newProducts);
       resetCheckedList(newProducts);
@@ -56,6 +62,7 @@ export default function InventoryAdd() {
   };
 
   const handleSaveChanges = async (event) => {
+    const token = localStorage.getItem("token");
     event.preventDefault(); // prevent default form submission behavior
 
     try {
@@ -80,7 +87,10 @@ export default function InventoryAdd() {
 
       const response = await fetch(`/api/locations/${locationId}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
         body: JSON.stringify({ products: productsToAdd }),
       });
 
