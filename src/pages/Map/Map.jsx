@@ -26,6 +26,7 @@ const greenIcon = new L.Icon({
   shadowSize: [41, 41],
 });
 
+
 const Map = () => {
   const [locations, setLocations] = useState([]);
   const [userLatitude, setUserLatitude] = useState("");
