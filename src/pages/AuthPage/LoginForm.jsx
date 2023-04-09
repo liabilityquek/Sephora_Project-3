@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { getUser } from "../../utilities/users-service";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 export default function LoginForm({ setUser }) {
   const navigate = useNavigate();
@@ -25,14 +25,21 @@ export default function LoginForm({ setUser }) {
       if (!response.ok) {
         throw new Error(data.error || "Network error");
       }
-      localStorage.setItem("token",  JSON.stringify(data.token));
-      const decoded = getUser()
-      const Name =  JSON.parse(window.atob(data.token.split(".")[1]))
-      console.log(Name.customer.name)
-      console.log(Name.customer.email)
+      localStorage.setItem("token", JSON.stringify(data.token));
+      const decoded = getUser();
+      const Name = JSON.parse(window.atob(data.token.split(".")[1]));
+      console.log(Name.customer.name);
+      console.log(Name.customer.email);
       setUser(decoded);
-      navigate("/");
-      console.log(decoded)
+      if (Name.customer.role === "CUSTOMER") {
+        navigate("/");
+      } else if (Name.customer.role === "OPSADMIN") {
+        navigate("/productpage");
+      } else if (Name.customer.role === "HRADMIN") {
+        navigate("/");
+      }
+
+      console.log(decoded);
     } catch (error) {
       setError(error.message);
     }
@@ -53,7 +60,11 @@ export default function LoginForm({ setUser }) {
             <legend>Login</legend>
             <label>
               Email:
-              <input name="email" value={loginTry.email} onChange={handleChange} />
+              <input
+                name="email"
+                value={loginTry.email}
+                onChange={handleChange}
+              />
             </label>
             <label>
               Password:{" "}
@@ -65,6 +76,9 @@ export default function LoginForm({ setUser }) {
               />
             </label>
             <button>Login</button>
+            <Link to="/forgetpassword">
+              <button>Forget Password</button>
+            </Link>
           </fieldset>
         </form>
       </div>

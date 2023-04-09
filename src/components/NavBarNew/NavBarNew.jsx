@@ -3,7 +3,10 @@ import "./NavBarNew.css";
 
 export default function NavBarNew() {
   return (
-    <nav className="navbar navbar-expand-lg navbar-light bg-white border-bottom">
+    <nav
+      style={{ flexDirection: "column" }}
+      className="headerMenu navbar navbar-expand-lg navbar-light bg-white border-bottom"
+    >
       <ul className="navbar-nav justify-content-center">
         <li className="nav-item">
           <NavLink className="nav-link text-black nav-link-hover" to="/">
@@ -12,7 +15,12 @@ export default function NavBarNew() {
         </li>
         <li className="nav-item">
           <NavLink className="nav-link text-black nav-link-hover" to="/booking">
-            Book an Appointment
+            Appointment Booking
+          </NavLink>
+        </li>
+        <li className="nav-item">
+          <NavLink className="nav-link text-black nav-link-hover" to="/maps">
+            Locate Us
           </NavLink>
         </li>
       </ul>
