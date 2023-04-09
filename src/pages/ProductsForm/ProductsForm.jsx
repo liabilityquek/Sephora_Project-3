@@ -27,7 +27,7 @@ export default function ProductsForm({ products, delProduct }) {
   return (
     <div className="flexed">
       <div className="table-responsive">
-        <h1>Add Product</h1>
+        <h3>Product Portfolio</h3>
         <Link to="/productpage/new">
           <button>Add Product</button>
         </Link>
