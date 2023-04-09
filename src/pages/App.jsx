@@ -3,7 +3,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import React from "react";
 import Header from "../components/Header/Header";
-import NavBarNew from "../components/NavBarNew/NavBarNew";
 import "../index.css";
 import { getUser } from "../utilities/users-service";
 import AppointmentPage from "./Appoinments/AppointmentPage";
@@ -138,14 +137,10 @@ export default function App() {
   ];
 
   const hrAdminRouteConfig = [
-    // ...productsPageRoutes,
-    // ...customerPagesRoutes,
     //to add routes to admin pages only hr can access
   ];
 
   const opsAdminRouteConfig = [
-    // ...productsPageRoutes,
-    // ...customerPagesRoutes,
     {
       path: "/productpage",
       element: <ProductsForm products={products} delProduct={delProduct} />,
