@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import "../../pages/InventoryManagement/InventoryTable/InventoryTable.css";
+import "./InventoryAdd.css";
 
 export default function InventoryAdd() {
   const { state } = useLocation();
@@ -138,8 +138,10 @@ export default function InventoryAdd() {
   });
 
   return (
-    <div>
-      <h2>Add products to: {locationName}</h2>
+    <div className="inventoryAdd">
+      <h3 style={{ backgroundColor: "red" }} className="inventoryAddPageTitle">
+        Add products to: {locationName}
+      </h3>
       <div className="w-100">
         <div className="rowHeader">
           <div className="wd-300 input-group input-group-sm">
