@@ -131,7 +131,7 @@ export default function () {
                     handleDelete(selectedLocationData._id, productDetails._id)
                   }
                 >
-                  REMOVE PRODUCT
+                  Remove Product
                 </button>
               </td>
             </tr>
@@ -199,7 +199,7 @@ export default function () {
                     className="btn btn-primary wd-300"
                     onClick={redirectAddPage}
                   >
-                    ADD NEW PRODUCT
+                    Add Product
                   </button>
                 </div>
                 <table className="table">
