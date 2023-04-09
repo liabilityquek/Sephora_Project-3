@@ -44,7 +44,7 @@ export default function ProductsForm({ products, delProduct }) {
             </div>
             <div className="addNewProduct">
               <Link to="/productpage/new">
-                <button className="btn btn-primary">Add New Product</button>
+                <button className="btn btn-dark">Add New Product</button>
               </Link>
             </div>
           </div>
@@ -72,10 +72,10 @@ export default function ProductsForm({ products, delProduct }) {
                   <td>{p.brand}</td>
                   <td className="pictureUrl">{p.imgurl}</td>
                   <td className="actionsTableDataPF">
-                    <ProductsDeleteButton id={p._id} delProduct={delProduct} />
                     <Link to={`/productpage/products/${p._id}/edit`}>
-                      <button className="btn btn-primary">Edit</button>
+                      <button className="btn btn-dark">Edit</button>
                     </Link>
+                    <ProductsDeleteButton id={p._id} delProduct={delProduct} />
                   </td>
                 </tr>
               ))}
