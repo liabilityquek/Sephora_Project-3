@@ -1,5 +1,4 @@
 export default function ProductsDeleteButton({ id, delProduct }) {
-  
   const handleDelete = async () => {
     const response = await fetch(`/api/locations/products/${id}`, {
       method: "DELETE",
@@ -11,5 +10,9 @@ export default function ProductsDeleteButton({ id, delProduct }) {
     delProduct(id);
   };
 
-  return <button onClick={handleDelete}>Delete</button>;
+  return (
+    <button className="btn btn-danger" onClick={handleDelete}>
+      Delete
+    </button>
+  );
 }

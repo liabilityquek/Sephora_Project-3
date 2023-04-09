@@ -187,7 +187,7 @@ export default function () {
                     className="btn btn-primary wd-300"
                     onClick={redirectAddPage}
                   >
-                    ADD NEW PRODUCT
+                    ADD PRODUCT
                   </button>
                 </div>
                 <table className="table">
