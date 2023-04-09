@@ -119,94 +119,109 @@ export default function Edit() {
                   name="name"
                   className="form-control"
                   onChange={handleInputChange}
-                  defaultValue={makeupArtists.name}
+                  defaultValue={makeupArtists[0].name}
                   required
                   />
-                  </div>
+              </div>
 
-                  <div className="form-group">
-                    <label htmlFor="email">Email:</label>
-                    <input
-                      type="email"
-                      name="email"
-                      className="form-control"
-                      onChange={handleInputChange}
-                      defaultValue={makeupArtists.email}
-                      required/>
-                  </div>
-
-        <div className="form-group">
-          <label htmlFor="phone">Phone:</label>
-          <input
-            type="text"
-            name="phone"
-            className="form-control"
-            onChange={handleInputChange}
-            defaultValue={makeupArtists.phone}
-            required
-          />
-        </div>
+              <div className="form-group">
+                <label htmlFor="location">Location:</label>
+                <select
+                  name="location"
+                  className="form-control"
+                  defaultValue={makeupArtists[0].location._id}
+                  onChange={handleInputChange} required>
+                    <option value="">--Select Location--</option>
+                  {locations.map((location) => (
+                    <option key={location._id} value={location._id}>
+                      {location.name}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
         <div className="form-group">
-          <label htmlFor="location">Location:</label>
-          <select
-            name="location"
-            className="form-control"
-            defaultValue={makeupArtists.locations.id}
-            onChange={handleInputChange}
-          >
-            {locations.map((location) => (
-              <option key={location.id} value={location.id}>
-                {location.name}
-              </option>
-            ))}
-          </select>
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="description">Description:</label>
-          <textarea
-            name="description"
-            className="form-control"
-            onChange={handleInputChange}
-            defaultValue={makeupArtists.description}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="price">Price:</label>
-          <input
-            type="number"
-            name="price"
-            className="form-control"
-            onChange={handleInputChange}
-            defaultValue={makeupArtists.price}
-            required
-          />
-        </div>
-
-        <div className="form-group">
-          <label htmlFor="date">Date:</label>
+        <label htmlFor="workingSchedule.startDate">Start Date: </label>
           <input
             type="date"
-            name="date"
+            name="workingSchedule.startDate"
+            placeholder="YYYY-MM-DD"
+            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
             className="form-control"
             onChange={handleInputChange}
-            defaultValue={moment(makeupArtists.date).format("YYYY-MM-DD")}
+            defaultValue={moment(makeupArtists[0].workingSchedule.startDate).format("YYYY-MM-DD")}
             min={minDate}
             required
           />
         </div>
 
         <div className="form-group">
-          <label htmlFor="time">Time:</label>
+        <label htmlFor="workingSchedule.endDate">End Date: </label>
           <input
-            type="time"
-            name="time"
+            type="date"
+            name="workingSchedule.endDate"
+            placeholder="YYYY-MM-DD"
+            pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
             className="form-control"
             onChange={handleInputChange}
-            defaultValue={makeupArtists.time}
+            defaultValue={moment(makeupArtists[0].workingSchedule.endDate).format("YYYY-MM-DD")}
+            min={minDate}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="workingHours.startTime">Start Time:</label>
+          <input
+            type="time"
+            name="workingHours.startTime"
+            className="form-control"
+            placeholder="HH:MM"
+            pattern="^([01]\d|2[0-3]):([0-5]\d)$"
+            onChange={handleInputChange}
+            defaultValue={makeupArtists[0].workingHours.startTime}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="workingHours.endTime">End Time:</label>
+          <input
+            type="time"
+            name="workingHours.endTime"
+            className="form-control"
+            placeholder="HH:MM"
+            pattern="^([01]\d|2[0-3]):([0-5]\d)$"
+            onChange={handleInputChange}
+            defaultValue={makeupArtists[0].workingHours.endTime}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="breakTime.startTime">Break Start Time:</label>
+          <input
+            type="time"
+            name="breakTime.startTime"
+            className="form-control"
+            placeholder="HH:MM"
+            pattern="^([01]\d|2[0-3]):([0-5]\d)$"
+            onChange={handleInputChange}
+            defaultValue={makeupArtists[0].breakTime.startTime}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="breakTime.endTime">Break End Time:</label>
+          <input
+            type="time"
+            name="breakTime.endTime"
+            className="form-control"
+            placeholder="HH:MM"
+            pattern="^([01]\d|2[0-3]):([0-5]\d)$"
+            onChange={handleInputChange}
+            defaultValue={makeupArtists[0].breakTime.endTime}
             required
           />
         </div>
