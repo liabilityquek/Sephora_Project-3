@@ -3,7 +3,7 @@ import axios from "axios";
 import { Link, Routes, Route, useNavigate } from "react-router-dom";
 import MakeupArtist from "./MakeupArtist";
 import NewArtist from "./NewArtist";
-import './Admin.css'
+import "./Admin.css";
 
 export default function Admin() {
   const [makeupArtists, setMakeupArtists] = useState([]);
@@ -79,10 +79,7 @@ export default function Admin() {
       <div className="container">
         <div className="row mt-4">
           <div className="col">
-            <button
-              className="btn btn-primary"
-              onClick={handleClick}
-            >
+            <button className="btn btn-primary" onClick={handleClick}>
               Create New Make Up Artist
             </button>
           </div>
@@ -108,34 +105,36 @@ export default function Admin() {
               <h2>Makeup Artists</h2>
               <ul className="list-group">
                 {makeupArtists.map((makeupArtist) => (
-                   <li
-                   className="list-group-item d-flex justify-content-between align-items-center Link"
-                   key={makeupArtist._id}
-                 >
-                   <Link to={`/makeupartist/${makeupArtist._id}`}>
-                     {makeupArtist.name}
-                   </Link>
-                   <button
-                     className="btn btn-danger"
-                     onClick={() => handleDelete(makeupArtist._id)}
-                   >
-                     Delete
-                   </button>
-                 </li>
-               ))}
-             </ul>
-           </div>
-         </div>
-       ) : (
-         <div className="row mt-4">
-           <div className="col">
-             <p>No makeup artists found.</p>
-           </div>
-         </div>
-       )}
-     </div>
-     <Routes>
-       <Route path="/makeupartist/:id" element={<MakeupArtist />} />
-       <Route path="/newmakeupartist" element={<NewArtist />} />
-     </Routes>
-   </>)}
+                  <li
+                    className="list-group-item d-flex justify-content-between align-items-center Link"
+                    key={makeupArtist._id}
+                  >
+                    <Link to={`/makeupartist/${makeupArtist._id}`}>
+                      {makeupArtist.name}
+                    </Link>
+                    <button
+                      className="btn btn-danger"
+                      onClick={() => handleDelete(makeupArtist._id)}
+                    >
+                      Delete
+                    </button>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          </div>
+        ) : (
+          <div className="row mt-4">
+            <div className="col">
+              <p>No makeup artists found.</p>
+            </div>
+          </div>
+        )}
+      </div>
+      <Routes>
+        <Route path="/makeupartist/:id" element={<MakeupArtist />} />
+        <Route path="/newmakeupartist" element={<NewArtist />} />
+      </Routes>
+    </>
+  );
+}

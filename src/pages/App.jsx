@@ -69,7 +69,7 @@ export default function App() {
   }, [products]);
 
   useEffect(() => {
-    fetch("/api")
+    fetch("/api/")
       .then((response) => response.json())
       .then((data) => setProducts(data))
       .catch((error) => console.error(error));
