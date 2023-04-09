@@ -3,6 +3,7 @@ import axios from "axios";
 import { Link, Routes, Route, useNavigate } from "react-router-dom";
 import MakeupArtist from "./MakeupArtist";
 import NewArtist from "./NewArtist";
+import './Admin.css'
 
 export default function Admin() {
   const [makeupArtists, setMakeupArtists] = useState([]);
@@ -13,25 +14,30 @@ export default function Admin() {
 
   useEffect(() => {
     const adminToken = localStorage.getItem("token");
-    JSON.parse(window.atob(adminToken.split(".")[1])).role === "HRADMIN" ? setToken(adminToken) : null ;
-    
+    JSON.parse(window.atob(adminToken.split(".")[1])).role === "HRADMIN"
+      ? setToken(adminToken)
+      : null;
+
     axios.get("/api/maps").then((response) => {
-        setLocations(response.data);
+      setLocations(response.data);
     });
   }, []);
 
   useEffect(() => {
     async function fetchMakeupArtists() {
       try {
-        if(selectedMakeUpLocation !== ""){
-        const response = await axios.get(`/api/makeupartist/${selectedMakeUpLocation}`, {
-          headers: {
-            'Content-Type': 'application/json',
-            "Authorization": `Bearer ${token}`,
-          },
-        });
-        setMakeupArtists(response.data);
-        } 
+        if (selectedMakeUpLocation !== "") {
+          const response = await axios.get(
+            `/api/makeupartist/${selectedMakeUpLocation}`,
+            {
+              headers: {
+                "Content-Type": "application/json",
+                Authorization: `Bearer ${token}`,
+              },
+            }
+          );
+          setMakeupArtists(response.data);
+        }
       } catch (error) {
         console.error("Error fetching makeup artists:", error);
       }
@@ -47,8 +53,8 @@ export default function Admin() {
     try {
       const response = await axios.delete(`/api/makeupartist/${id}`, {
         headers: {
-          'Content-Type': 'application/json',
-          "Authorization": `Bearer ${token}`,
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${token}`,
         },
       });
       if (response.status === 200) {
@@ -62,49 +68,74 @@ export default function Admin() {
     }
   };
 
-  function handleClick(){
-    console.log('hi1')
-    navigate('/newmakeupartist')
-    console.log('hi2')
-
+  function handleClick() {
+    console.log("hi1");
+    navigate("/newmakeupartist");
+    console.log("hi2");
   }
 
   return (
     <>
-      <div>
-      {/* `<Link to={"/newmakeupartist"}> */}
-          <button onClick={handleClick}> Create New Make Up Artist</button>
-        {/* </Link> */}
-        <h2>Select a location:</h2>
-        <select value={selectedMakeUpLocation} onChange={handleLocationChange}>
-          <option value="">--Select a location--</option>
-          {locations.map((location) => (
-            <option key={location._id} value={location._id}>
-              {location.name}
-            </option>
-          ))}
-        </select>
+      <div className="container">
+        <div className="row mt-4">
+          <div className="col">
+            <button
+              className="btn btn-primary"
+              onClick={handleClick}
+            >
+              Create New Make Up Artist
+            </button>
+          </div>
+          <div className="col">
+            <h2>Select a location:</h2>
+            <select
+              className="form-select"
+              value={selectedMakeUpLocation}
+              onChange={handleLocationChange}
+            >
+              <option value="">--Select a location--</option>
+              {locations.map((location) => (
+                <option key={location._id} value={location._id}>
+                  {location.name}
+                </option>
+              ))}
+            </select>
+          </div>
+        </div>
         {makeupArtists && makeupArtists.length > 0 ? (
-      <div>
-        <h2>Makeup Artists</h2>
-        <ul>
-          {makeupArtists.map((makeupArtist) => (
-            <li key={makeupArtist._id}>
-            <Link to={`/makeupartist/${makeupArtist._id}`}>
-                {makeupArtist.name}
-              </Link>
-              <button onClick={() => handleDelete(makeupArtist._id)}>X</button>
-            </li>
-          ))}
-        </ul>
-      </div>):(<p> No makeup artist at this location</p>)}
-    </div>    
-    <Routes>
-      {makeupArtists.map((makeupArtist) => (
-      <Route key={makeupArtist._id} path={`/makeupartist/${makeupArtist._id}`} element={<MakeupArtist id={makeupArtist._id} />} />
-        ))}
-      <Route path="/newmakeupartist" element={<NewArtist />} />
-    </Routes>
-  </>
-  );
-}
+          <div className="row mt-4">
+            <div className="col">
+              <h2>Makeup Artists</h2>
+              <ul className="list-group">
+                {makeupArtists.map((makeupArtist) => (
+                   <li
+                   className="list-group-item d-flex justify-content-between align-items-center Link"
+                   key={makeupArtist._id}
+                 >
+                   <Link to={`/makeupartist/${makeupArtist._id}`}>
+                     {makeupArtist.name}
+                   </Link>
+                   <button
+                     className="btn btn-danger"
+                     onClick={() => handleDelete(makeupArtist._id)}
+                   >
+                     Delete
+                   </button>
+                 </li>
+               ))}
+             </ul>
+           </div>
+         </div>
+       ) : (
+         <div className="row mt-4">
+           <div className="col">
+             <p>No makeup artists found.</p>
+           </div>
+         </div>
+       )}
+     </div>
+     <Routes>
+       <Route path="/makeupartist/:id" element={<MakeupArtist />} />
+       <Route path="/newmakeupartist" element={<NewArtist />} />
+     </Routes>
+   </>)}

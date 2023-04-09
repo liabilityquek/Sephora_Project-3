@@ -103,105 +103,121 @@ export default function Edit() {
   };
 
   return (
-    <>
-      {makeupArtists && (
-        <div>
-          <form onSubmit={handleSubmit}>
-            {successMessage && (
-              <p className="success-message">{successMessage}</p>
-            )}
-            <label htmlFor="name">Name:</label>
-            <input
-              type="text"
-              name="name"
-              onChange={handleInputChange}
-              defaultValue={makeupArtists[0].name}
-            />
+    <div className="container">
+      <div className="row justify-content-center mt-5">
+        <div className="col-md-8">
+          {makeupArtists && (
+            <form onSubmit={handleSubmit}>
+              {successMessage && (
+                <div className="alert alert-success">{successMessage}</div>
+              )}
 
-            <label htmlFor="workingSchedule.startDate">Start Date: </label>
-            <input
-              type="date"
-              name="workingSchedule.startDate"
-              onChange={handleInputChange}
-              placeholder="YYYY-MM-DD"
-              pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-              min={minDate}
-              defaultValue={moment(
-                makeupArtists[0].workingSchedule.startDate
-              ).format("YYYY-MM-DD")}
-            />
+              <div className="form-group">
+                <label htmlFor="name">Name:</label>
+                <input
+                  type="text"
+                  name="name"
+                  className="form-control"
+                  onChange={handleInputChange}
+                  defaultValue={makeupArtists.name}
+                  required
+                  />
+                  </div>
 
-            <label htmlFor="workingSchedule.endDate">End Date:</label>
-            <input
-              type="date"
-              name="workingSchedule.endDate"
-              placeholder="YYYY-MM-DD"
-              onChange={handleInputChange}
-              pattern="[0-9]{4}-[0-9]{2}-[0-9]{2}"
-              min={minDate}
-              defaultValue={moment(
-                makeupArtists[0].workingSchedule.startDate
-              ).format("YYYY-MM-DD")}
-            />
+                  <div className="form-group">
+                    <label htmlFor="email">Email:</label>
+                    <input
+                      type="email"
+                      name="email"
+                      className="form-control"
+                      onChange={handleInputChange}
+                      defaultValue={makeupArtists.email}
+                      required/>
+                  </div>
 
-            <label htmlFor="workingHours.startTime">Start Time:</label>
-            <input
-              type="time"
-              name="workingHours.startTime"
-              onChange={handleInputChange}
-              placeholder="HH:MM"
-              pattern="^([01]\d|2[0-3]):([0-5]\d)$"
-              defaultValue={makeupArtists[0].workingHours.startTime}
-            />
-
-            <label htmlFor="workingHours.endTime">End Time:</label>
-            <input
-              type="time"
-              name="workingHours.endTime"
-              placeholder="HH:MM"
-              onChange={handleInputChange}
-              pattern="^([01]\d|2[0-3]):([0-5]\d)$"
-              defaultValue={makeupArtists[0].workingHours.endTime}
-            />
-
-            <label htmlFor="breakTime.startTime">Break Start Time:</label>
-            <input
-              type="time"
-              name="breakTime.startTime"
-              placeholder="HH:MM"
-              onChange={handleInputChange}
-              pattern="^([01]\d|2[0-3]):([0-5]\d)$"
-              defaultValue={makeupArtists[0].breakTime.startTime}
-            />
-
-            <label htmlFor="breakTime.endTime">Break End Time:</label>
-            <input
-              type="time"
-              name="breakTime.endTime"
-              placeholder="HH:MM"
-              onChange={handleInputChange}
-              pattern="^([01]\d|2[0-3]):([0-5]\d)$"
-              defaultValue={makeupArtists[0].breakTime.endTime}
-            />
-
-            <label htmlFor="location">Location Name:</label>
-            <select
-              name="location"
-              onChange={handleInputChange}
-              defaultValue={makeupArtists[0].location._id}
-            >
-              <option value="">--Select Location--</option>
-              {locations.map((location) => (
-                <option key={location._id} value={location._id}>
-                  {location.name}
-                </option>
-              ))}
-            </select>
-
-            <button type="submit">Submit</button>
-          </form>
+        <div className="form-group">
+          <label htmlFor="phone">Phone:</label>
+          <input
+            type="text"
+            name="phone"
+            className="form-control"
+            onChange={handleInputChange}
+            defaultValue={makeupArtists.phone}
+            required
+          />
         </div>
-      )}
-    </>
+
+        <div className="form-group">
+          <label htmlFor="location">Location:</label>
+          <select
+            name="location"
+            className="form-control"
+            defaultValue={makeupArtists.locations.id}
+            onChange={handleInputChange}
+          >
+            {locations.map((location) => (
+              <option key={location.id} value={location.id}>
+                {location.name}
+              </option>
+            ))}
+          </select>
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="description">Description:</label>
+          <textarea
+            name="description"
+            className="form-control"
+            onChange={handleInputChange}
+            defaultValue={makeupArtists.description}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="price">Price:</label>
+          <input
+            type="number"
+            name="price"
+            className="form-control"
+            onChange={handleInputChange}
+            defaultValue={makeupArtists.price}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="date">Date:</label>
+          <input
+            type="date"
+            name="date"
+            className="form-control"
+            onChange={handleInputChange}
+            defaultValue={moment(makeupArtists.date).format("YYYY-MM-DD")}
+            min={minDate}
+            required
+          />
+        </div>
+
+        <div className="form-group">
+          <label htmlFor="time">Time:</label>
+          <input
+            type="time"
+            name="time"
+            className="form-control"
+            onChange={handleInputChange}
+            defaultValue={makeupArtists.time}
+            required
+          />
+        </div>
+
+        <button type="submit" className="btn btn-primary">
+          Update
+        </button>
+      </form>
+    )}
+  </div>
+</div>
+  </div>
   );
 }

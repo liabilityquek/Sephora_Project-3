@@ -1,52 +1,68 @@
 import { useParams, Link, Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
-import Edit from './Edit'
-const token = localStorage.getItem("token");
+import Edit from './Edit';
+import { Button } from 'react-bootstrap';
+
+const token = localStorage.getItem('token');
 
 export default function MakeupArtist() {
-    const [ appointments, setAppointments] = useState([])
-    const {id} = useParams();
+  const [appointments, setAppointments] = useState([]);
+  const { id } = useParams();
 
-    useEffect(() => {
-      async function fetchAppointments() {
-        try {
-          const response = await fetch(`/api/makeupartist/admin/${id}`, {
-            headers: {
-              "Content-Type": "application/json",
-              "Authorization": `Bearer ${token}`,
-            },
-          });
-          if (!response.ok) {
-            throw new Error("Failed to fetch appointments");
-          }
-          const data = await response.json();
-          setAppointments(data);
-        } catch (error) {
-          console.error("Error fetching appointments:", error);
+  useEffect(() => {
+    async function fetchAppointments() {
+      try {
+        const response = await fetch(`/api/makeupartist/admin/${id}`, {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+          },
+        });
+        if (!response.ok) {
+          throw new Error('Failed to fetch appointments');
         }
+        const data = await response.json();
+        setAppointments(data);
+      } catch (error) {
+        console.error('Error fetching appointments:', error);
       }
-      fetchAppointments();
-    }, [id]);
-    
-    console.log(appointments)
+    }
+    fetchAppointments();
+  }, [id]);
 
-    return (
+  return (
+    <div className="container">
+      {appointments.length > 0 && (
         <>
-        {appointments.length > 0 && appointments[0].makeupArtist.id.name}
-        <Link to={`/makeupartist/edit/${id}`}>
-            <button>Edit </button>
-        </Link>
-          <h2>Appointments</h2>
-          <ul>
-            {appointments.map((appointment) => (
-              <li key={appointment._id}>
-                Date: {appointment.date} | Time:{appointment.timeslot} | Customer's Information: {appointment.customerInfo.name}, {appointment.customerInfo.email}
-              </li>
-            ))}
-          </ul>
-        <Routes>
-            <Route path={`/makeupartist/edit/${id}`} element={<Edit />} />
-        </Routes>
+          <h3>Makeup Artist: {appointments[0].makeupArtist.id.name}</h3>
+          <Link to={`/makeupartist/edit/${id}`}>
+            <Button variant="primary">Edit</Button>
+          </Link>
+          <hr />
         </>
-    );
+      )}
+      <h4>Appointments</h4>
+      <ul className="list-group">
+        {appointments.map((appointment) => (
+          <li key={appointment._id} className="list-group-item">
+            <div className="row">
+              <div className="col-3">
+                <strong>Date:</strong> {appointment.date}
+              </div>
+              <div className="col-3">
+                <strong>Time:</strong> {appointment.timeslot}
+              </div>
+              <div className="col-6">
+                <strong>Customer's Information:</strong>{' '}
+                {appointment.customerInfo.name}, {appointment.customerInfo.email}
+              </div>
+            </div>
+          </li>
+        ))}
+      </ul>
+      <Routes>
+        <Route path={`/makeupartist/edit/${id}`} element={<Edit />} />
+      </Routes>
+    </div>
+  );
 }
