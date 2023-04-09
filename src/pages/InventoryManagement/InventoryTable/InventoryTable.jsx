@@ -205,7 +205,7 @@ export default function () {
                 </div>
                 <table className="table">
                   <thead>
-                    <tr>
+                    <tr className="inventoryTableHeader">
                       <th scope="col">Product Name</th>
                       <th scope="col">Product Id</th>
                       <th scope="col">Product Brand</th>

@@ -48,6 +48,13 @@ export default function InventoryAdd() {
       ...prevState,
       [productId]: isChecked,
     }));
+
+    const tableRow = event.target.closest("tr");
+    if (isChecked) {
+      tableRow.classList.add("inventoryAddHighlight");
+    } else {
+      tableRow.classList.remove("inventoryAddHighlight");
+    }
   };
 
   const handleQuantityChange = (event, productId) => {
@@ -139,26 +146,24 @@ export default function InventoryAdd() {
 
   return (
     <div className="inventoryAdd">
-      <h3 style={{ backgroundColor: "red" }} className="inventoryAddPageTitle">
-        Add products to: {locationName}
-      </h3>
-      <div className="w-100">
-        <div className="rowHeader">
-          <div className="wd-300 input-group input-group-sm">
-            <span className="input-group-text">Search</span>
-            <input
-              type="text"
-              className="form-control search-input"
-              placeholder="Enter product name, id or brand"
-              onChange={(e) => setSearchValue(e.target.value)}
-            ></input>
-          </div>
+      <h3 className="inventoryAddPageTitle">Add products to: {locationName}</h3>
+
+      <div className="rowHeaderIA">
+        <div className="wd-300-IA input-group input-group-sm">
+          <span className="input-group-text">Search</span>
+          <input
+            type="text"
+            className="form-control search-input"
+            placeholder="Enter product name, id or brand"
+            onChange={(e) => setSearchValue(e.target.value)}
+          ></input>
         </div>
       </div>
+
       <form onSubmit={handleSaveChanges}>
-        <table>
+        <table className="table tableIA">
           <thead>
-            <tr>
+            <tr className="inventoryAddHeader">
               <th>Select</th>
               <th>Product Name</th>
               <th>Product Id</th>
@@ -166,7 +171,7 @@ export default function InventoryAdd() {
               <th>Product Quantity</th>
             </tr>
           </thead>
-          <tbody>
+          <tbody className="tableBodyIA">
             {filteredProductList.map((product) => (
               <tr key={product._id}>
                 <td>
@@ -184,24 +189,34 @@ export default function InventoryAdd() {
                 <td>
                   <input
                     type="number"
-                    placeholder="Enter quantity"
                     min={0}
                     disabled={!checkedMap[product._id]}
-                    required
                     value={product.productQty || ""}
                     onChange={(event) =>
                       handleQuantityChange(event, product._id)
-                    } // add this line
+                    }
+                    placeholder={
+                      checkedMap[product._id] ? "Enter quantity" : ""
+                    }
                   />
                 </td>
               </tr>
             ))}
           </tbody>
         </table>
-        <div>
-          <button disabled={isSaveDisabled}>Add Product(s)</button>
-          <button onClick={handleReset}>Clear</button>
-          <button onClick={navigateBackToInventoryTable}>Back</button>
+        <div className="controlButtonsIA">
+          <button className="btn btn-danger" disabled={isSaveDisabled}>
+            Add Product(s)
+          </button>
+          <button className="btn btn-secondary" onClick={handleReset}>
+            Clear
+          </button>
+          <button
+            className="btn btn-secondary"
+            onClick={navigateBackToInventoryTable}
+          >
+            Back
+          </button>
         </div>
       </form>
     </div>

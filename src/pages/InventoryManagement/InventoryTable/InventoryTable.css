@@ -54,10 +54,10 @@ button .wd-300,
   display: flex;
 }
 
-table tr:hover {
-  background-color: #f2f2f2;
+.inventoryTableHeader {
+  background-color: lightgray;
 }
 
-.inventoryTablePageTitle {
-  font-size: 23px;
+.inventoryTableHeader:hover {
+  background-color: lightgray;
 }
