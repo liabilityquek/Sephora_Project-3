@@ -82,7 +82,7 @@ export default function EditProductsForm({
         </div>
         <div>
           <label className="form-label" htmlFor="price">
-            Price
+            Price (In cents)
           </label>
           <input
             type="number"
