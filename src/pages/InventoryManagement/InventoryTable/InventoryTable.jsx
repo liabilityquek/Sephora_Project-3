@@ -1,12 +1,13 @@
 import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
 import EditQuantityModal from "./EditQuantityModal/EditQuantityModal";
-import { useNavigate } from "react-router-dom";
 import "./InventoryTable.css";
 
 export default function () {
+  const { state } = useLocation();
   const navigate = useNavigate();
   const [locationsData, setLocationsData] = useState([]);
-  const [locationName, setLocationName] = useState("");
+  const [locationName, setLocationName] = useState(state?.locationName || "");
   const [conditions, setConditions] = useState({
     searchProductKeyword: "",
   });
@@ -86,7 +87,7 @@ export default function () {
           const productQty = product.productQty;
           const productDetails = product.productDetails;
           return (
-            <tr key={productDetails._id}>
+            <tr key={`${productDetails._id}${selectedLocationData._id}`}>
               <td>{productDetails.name}</td>
               <td>{productDetails._id}</td>
               <td>{productDetails.brand}</td>
@@ -95,7 +96,6 @@ export default function () {
                 <EditQuantityModal
                   productQty={productQty}
                   onSubmitSuccess={async (newProductQty) => {
-                    debugger;
                     const response = await fetch(
                       `/api/locations/${selectedLocationData._id}/products/${productDetails._id}`,
                       {

@@ -3,7 +3,11 @@ const Products = require("../models/Product");
 const showProducts = async (req, res) => {
   try {
     const query = {};
-    const products = await Products.find(query);
+    const products = await Products.find(query).sort({
+      name: 1,
+      category: 1,
+      brand: 1,
+    });
     res.status(200).json(products);
   } catch (error) {
     res.status(400).json({ error: error.message });
