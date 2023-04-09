@@ -17,7 +17,7 @@ export default function EditProductsForm({
     product
       ? {
           name: product.name,
-          price: product.price,
+          price: product.price / CONVERTTODOLLAR,
           category: product.category,
           brand: product.brand,
           imgurl: product.imgurl,
