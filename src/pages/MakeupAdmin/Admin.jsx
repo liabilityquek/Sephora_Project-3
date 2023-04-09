@@ -9,15 +9,19 @@ export default function Admin() {
   const [makeupArtists, setMakeupArtists] = useState([]);
   const [locations, setLocations] = useState([]);
   const [selectedMakeUpLocation, setSelectedMakeUpLocation] = useState("");
-  const [token, setToken] = useState("");
+  const [isAuth, setIsAuth] = useState(false);
+
   const navigate = useNavigate();
 
   useEffect(() => {
     const adminToken = localStorage.getItem("token");
-    JSON.parse(window.atob(adminToken.split(".")[1])).role === "HRADMIN"
-      ? setToken(adminToken)
-      : null;
+    console.log(JSON.stringify(adminToken))
+    console.log(adminToken)
 
+    if (adminToken) {
+      // const isAdmin = JSON.parse(window.atob(adminToken.split(".")[1])).role === "HRADMIN";
+      JSON.parse(window.atob(adminToken.split(".")[1])).customer.role === "HRADMIN" ? setIsAuth(adminToken) : false
+    } 
     axios.get("/api/maps").then((response) => {
       setLocations(response.data);
     });
@@ -26,13 +30,13 @@ export default function Admin() {
   useEffect(() => {
     async function fetchMakeupArtists() {
       try {
-        if (selectedMakeUpLocation !== "") {
+        if (isAuth && selectedMakeUpLocation !== "") {
           const response = await axios.get(
             `/api/makeupartist/${selectedMakeUpLocation}`,
             {
               headers: {
                 "Content-Type": "application/json",
-                Authorization: `Bearer ${token}`,
+                Authorization: `Bearer ${localStorage.getItem("token")}`,
               },
             }
           );
@@ -43,7 +47,7 @@ export default function Admin() {
       }
     }
     fetchMakeupArtists();
-  }, [selectedMakeUpLocation, token]);
+  }, [selectedMakeUpLocation, isAuth]);
 
   const handleLocationChange = (event) => {
     setSelectedMakeUpLocation(event.target.value);
@@ -76,61 +80,65 @@ export default function Admin() {
 
   return (
     <>
-      <div className="container">
-        <div className="row mt-4">
-          <div className="col">
-            <button className="btn btn-primary" onClick={handleClick}>
-              Create New Make Up Artist
-            </button>
-          </div>
-          <div className="col">
-            <h2>Select a location:</h2>
-            <select
-              className="form-select"
-              value={selectedMakeUpLocation}
-              onChange={handleLocationChange}
-            >
-              <option value="">--Select a location--</option>
-              {locations.map((location) => (
-                <option key={location._id} value={location._id}>
-                  {location.name}
-                </option>
-              ))}
-            </select>
-          </div>
-        </div>
-        {makeupArtists && makeupArtists.length > 0 ? (
+      {!isAuth ? (
+        <div className="centered-message">Access denied</div>
+      ) : (
+        <div className="container">
           <div className="row mt-4">
             <div className="col">
-              <h2>Makeup Artists</h2>
-              <ul className="list-group">
-                {makeupArtists.map((makeupArtist) => (
-                  <li
-                    className="list-group-item d-flex justify-content-between align-items-center Link"
-                    key={makeupArtist._id}
-                  >
-                    <Link to={`/makeupartist/${makeupArtist._id}`}>
-                      {makeupArtist.name}
-                    </Link>
-                    <button
-                      className="btn btn-danger"
-                      onClick={() => handleDelete(makeupArtist._id)}
-                    >
-                      Delete
-                    </button>
-                  </li>
+              <button className="btn btn-primary" onClick={handleClick}>
+                Create New Make Up Artist
+              </button>
+            </div>
+            <div className="col">
+              <h2>Select a location:</h2>
+              <select
+                className="form-select"
+                value={selectedMakeUpLocation}
+                onChange={handleLocationChange}
+              >
+                <option value="">--Select a location--</option>
+                {locations.map((location) => (
+                  <option key={location._id} value={location._id}>
+                    {location.name}
+                  </option>
                 ))}
-              </ul>
+              </select>
             </div>
           </div>
-        ) : (
-          <div className="row mt-4">
-            <div className="col">
-              <p>No makeup artists found.</p>
+          {makeupArtists && makeupArtists.length > 0 ? (
+            <div className="row mt-4">
+              <div className="col">
+                <h2>Makeup Artists</h2>
+                <ul className="list-group">
+                  {makeupArtists.map((makeupArtist) => (
+                    <li
+                      className="list-group-item d-flex justify-content-between align-items-center Link"
+                      key={makeupArtist._id}
+                    >
+                      <Link to={`/makeupartist/${makeupArtist._id}`}>
+                        {makeupArtist.name}
+                      </Link>
+                      <button
+                        className="btn btn-danger"
+                        onClick={() => handleDelete(makeupArtist._id)}
+                      >
+                        Delete
+                      </button>
+                    </li>
+                  ))}
+                </ul>
+              </div>
             </div>
-          </div>
-        )}
-      </div>
+          ) : (
+            <div className="row mt-4">
+              <div className="col">
+                <p>No makeup artists found.</p>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
       <Routes>
         <Route path="/makeupartist/:id" element={<MakeupArtist />} />
         <Route path="/newmakeupartist" element={<NewArtist />} />

@@ -107,30 +107,30 @@ export default function NewArtist() {
                 <div className="form-group">
                     <label htmlFor="workingSchedule.startDate">Start Date:</label>
                     <input type="date" id="startDate" className="form-control" value={startDate} onChange={(event) => setStartDate(event.target.value)} min={minDate} />
-</div>
-<div className="form-group">
+                </div>
+            <div className="form-group">
                 <label htmlFor="workingSchedule.endDate">End Date:</label>
                 <input type="date" id="endDate" className="form-control" value={endDate} onChange={(event) => setEndDate(event.target.value)} min={startDate} />
             </div>
 
             <div className="form-group">
                 <label htmlFor="workingHours.startTime">Start Time:</label>
-                <input type="time" id="startTime" className="form-control" value={startTime} onChange={handleInputChange} />
+                <input type="time" id="startTime" name="workingHours.startTime" className="form-control" value={startTime} onChange={handleInputChange} />
             </div>
 
             <div className="form-group">
                 <label htmlFor="workingHours.endTime">End Time:</label>
-                <input type="time" id="endTime" className="form-control" value={endTime} onChange={handleInputChange} />
+                <input type="time" id="endTime" name="workingHours.endTime" className="form-control" value={endTime} onChange={handleInputChange} />
             </div>
 
             <div className="form-group">
                 <label htmlFor="breakTime.startTime">Break Start Time:</label>
-                <input type="time" id="breakStartTime" className="form-control" value={breakStartTime} onChange={handleInputChange} />
+                <input type="time" id="breakStartTime" name="breakTime.startTime" className="form-control" value={breakStartTime} onChange={handleInputChange} />
             </div>
 
             <div className="form-group">
                 <label htmlFor="breakTime.endTime">Break End Time:</label>
-                <input type="time" id="breakEndTime" className="form-control" value={breakEndTime} onChange={handleInputChange} />
+                <input type="time" id="breakEndTime" name="breakTime.endTime"className="form-control" value={breakEndTime} onChange={handleInputChange} />
             </div>
 
             <div className="form-group">
@@ -138,7 +138,7 @@ export default function NewArtist() {
                 <select id="location" className="form-control" value={selectedLocation} onChange={handleLocationChange}>
                     <option value="">Choose a location</option>
                     {locations.map((location) => (
-                        <option key={location.id} value={location.id}>{location.name}</option>
+                        <option key={location.id} value={location._id}>{location.name}</option>
                     ))}
                 </select>
             </div>
