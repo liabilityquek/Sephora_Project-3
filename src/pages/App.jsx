@@ -27,6 +27,7 @@ import SignUpForm from "./AuthPage/SignUpForm";
 import LoginForm from "./AuthPage/LoginForm";
 import WithCustomerNavTools from "../components/WithCustomerBanner";
 import WithNavBar from "../components/WithNavBar";
+import { Link } from "react-router-dom";
 
 export default function App() {
   const [user, setUser] = useState(getUser());
@@ -105,7 +106,9 @@ export default function App() {
     },
   ];
 
-  const accessDeniedComponent = <div>Access denied</div>;
+  const accessDeniedComponent = (
+    <div className="centered-message">Access denied</div>
+  );
 
   const customerPagesRoutes = [
     ...productsPageRoutes,
@@ -272,7 +275,11 @@ export default function App() {
             <Route
               key={config.path}
               path={config.path}
-              element={<div>Please login</div>}
+              element={
+                <div className="centered-message">
+                  <Link to="/login">Please login</Link>
+                </div>
+              }
             />
           ))}
           {hrAdminRouteConfig.map((config) => (

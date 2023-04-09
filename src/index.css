@@ -24,18 +24,15 @@
   margin-top: 37px;
 }
 
-/* Center the "please login" message */
 .centered-message {
   display: flex;
   justify-content: center;
-  align-items: center;
   height: 100vh;
+  margin-top: 100px;
+  color: red;
+  font-size: 20px;
 }
 
-/* Center the "access denied" message */
-.access-denied {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100vh;
+.centered-message a {
+  color: red !important;
 }
