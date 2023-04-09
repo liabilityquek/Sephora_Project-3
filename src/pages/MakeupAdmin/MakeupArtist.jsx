@@ -24,6 +24,9 @@ export default function MakeupArtist() {
         }
         const data = await response.json();
         setAppointments(data);
+        if (data.length > 0) {
+          setMakeupArtistName(data[0].makeupArtist.id.name);
+        }
       } catch (error) {
         console.error('Error fetching appointments:', error);
       }
