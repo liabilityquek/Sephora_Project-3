@@ -44,7 +44,7 @@ export default function Header({ setUser, customer }) {
                     }`}
                     to="/login"
                   >
-                    Sign In
+                    Log In
                   </Link>
                 </li>
                 <li className="nav-item">
@@ -99,7 +99,7 @@ export default function Header({ setUser, customer }) {
                     </li>
                     <li>
                       <a className="dropdown-item" onClick={handleLogout}>
-                        Logout
+                        Log Out
                       </a>
                     </li>
                   </ul>
@@ -148,7 +148,7 @@ export default function Header({ setUser, customer }) {
                     )}
                     <li>
                       <a className="dropdown-item" onClick={handleLogout}>
-                        Logout
+                        Log Out
                       </a>
                     </li>
                   </ul>
