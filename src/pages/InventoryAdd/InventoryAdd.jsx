@@ -188,6 +188,7 @@ export default function InventoryAdd() {
                 <td>{product.brand}</td>
                 <td>
                   <input
+                    className="prodQuantityIA"
                     type="number"
                     min={0}
                     disabled={!checkedMap[product._id]}
