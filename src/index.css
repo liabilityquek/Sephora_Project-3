@@ -23,3 +23,16 @@
 .nav-bar-container {
   margin-top: 37px;
 }
+
+.centered-message {
+  display: flex;
+  justify-content: center;
+  height: 100vh;
+  margin-top: 100px;
+  color: red;
+  font-size: 20px;
+}
+
+.centered-message a {
+  color: red !important;
+}
