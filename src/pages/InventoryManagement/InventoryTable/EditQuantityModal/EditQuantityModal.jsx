@@ -28,7 +28,7 @@ export default function ({ productQty, onSubmitSuccess }) {
 
   return (
     <div>
-      <button className="btn btn-secondary me-3" onClick={() => setShow(true)}>
+      <button className="btn btn-dark me-3" onClick={() => setShow(true)}>
         Edit Quantity
       </button>
       <div
@@ -63,7 +63,7 @@ export default function ({ productQty, onSubmitSuccess }) {
             <div className="modal-footer">
               <button
                 type="button"
-                className="btn btn-primary"
+                className="btn btn-danger"
                 onClick={handleEditQuantitySubmit}
                 disabled={isConfirmButtonDisabled()}
               >

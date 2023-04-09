@@ -196,7 +196,7 @@ export default function () {
                     ></input>
                   </div>
                   <button
-                    className="btn btn-primary wd-300"
+                    className="btn btn-dark wd-300"
                     onClick={redirectAddPage}
                   >
                     Add Product
