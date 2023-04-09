@@ -28,6 +28,7 @@ export default function ProductsForm({ products, delProduct }) {
 
   return (
     <div className="inventoryTablePF">
+      <h3 className="productPortfolio">Product Portfolio</h3>
       <div className="contentPF">
         <div className="filterHeaderPF">
           <div className="rowHeaderProd">

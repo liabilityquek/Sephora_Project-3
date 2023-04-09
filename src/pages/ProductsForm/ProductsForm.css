@@ -4,7 +4,7 @@
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin-top: 30px;
+  margin-top: 10px;
 }
 
 .filterHeaderPF {
@@ -59,6 +59,10 @@
   background-color: lightgrey !important;
 }
 
+table thead tr:hover {
+  background-color: unset;
+}
+
 table tbody tr:hover {
   background-color: #f2f2f2;
 }
@@ -93,4 +97,8 @@ tr {
 td {
   border-bottom-width: 0 !important;
   box-shadow: unset !important;
+}
+
+.productPortfolio {
+  font-size: 23px;
 }
