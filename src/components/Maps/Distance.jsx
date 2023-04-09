@@ -57,7 +57,7 @@ export default function Distance({latitude,longitude, mapRef, handleResetMap}) {
    <div>
         {error && <div>Error fetching data</div>}
         {sortedData.map(location => (
-            <button onClick={()=>handleZoom(location)} key={location._id}>
+            <button onClick={()=>handleZoom(location)} key={location._id} className="reset-map">
                 Distance to {location.name}: {calculateDistance(latitude, longitude, location.latitude, location.longitude)} km
             </button>
          ))}

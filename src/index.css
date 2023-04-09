@@ -36,3 +36,19 @@
 .centered-message a {
   color: red !important;
 }
+
+.reset-map {
+  background-color: transparent;
+  color: black;
+  padding: 10px 20px;
+  cursor: pointer;
+  width: 325px;
+  border: none;
+  border-radius: 20px
+}
+
+.reset-map:hover {
+  background-color: black;
+  color: white;
+}
+
