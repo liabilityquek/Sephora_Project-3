@@ -32,10 +32,101 @@ Sephora is a premier beauty and cosmetics retailer with a strong online presence
 
 ![model](https://https://github.com/beryln-t/sephora/blob/main/assets/readmeAssetes/datamodel.png?raw=true)
 
+## CRUD
+
+### ADD Products to Location
+
+```javascript
+const addLocProduct = async (req, res) => {
+  try {
+    const locationId = req.params.locationId;
+    const productsToAdd = req.body.products;
+    const location = await Location.findById(locationId);
+
+    //check all product has quantity
+    const hasMissingQuantity = productsToAdd.some(
+      (product) => !product.productQty || product.productQty < 0
+    );
+    if (hasMissingQuantity) {
+      throw new Error(
+        "All selected products must have a non-negative quantity entered."
+      );
+    }
+
+    // Check if selected products already exist in the location
+    const existingProducts = location.products.map((product) =>
+      product.productDetails.toString()
+    );
+    const newProducts = [];
+    const existingProductNames = [];
+    for (const product of productsToAdd) {
+      if (existingProducts.includes(product.productId.toString())) {
+        const existingProduct = await Product.findById(product.productId);
+        existingProductNames.push(existingProduct.name);
+      } else {
+        newProducts.push({
+          productDetails: product.productId,
+          productQty: product.productQty,
+        });
+      }
+    }
+
+    if (existingProductNames.length > 0) {
+      const message = `The following products already exist in the location, please select new products to add: ${existingProductNames.join(
+        ", "
+      )}`;
+      throw new Error(message);
+    }
+
+    location.products.push(...newProducts);
+
+    const updatedLocation = await location.save();
+
+    res.status(200).json(updatedLocation);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+```
+
+### Edit Product
+
+```javascript
+const updateProducts = async (req, res) => {
+  try {
+    const updatedName = req.body.name;
+    const existingProduct = await Products.findOne({ name: updatedName });
+    if (existingProduct && existingProduct._id.toString() !== req.params.id) {
+      throw new Error("Another product with the same name already exists");
+    }
+
+    const updatedProduct = await Products.findByIdAndUpdate(
+      req.params.id,
+      req.body,
+      { new: true }
+    );
+    res.status(200).json(updatedProduct);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+};
+```
+
+### Show Something
+
+```javascript
+
+```
+
+### Delete Something
+
+```javascript
+
+```
+
 ## Key Learning
 
 ## References
 
 - https://www.sephora.sg/ (Image and Product resource)
 - https://getbootstrap.com/ (CSS)
--
