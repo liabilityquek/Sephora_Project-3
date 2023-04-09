@@ -2,6 +2,7 @@ import { useParams, Link, Routes, Route } from 'react-router-dom';
 import { useState, useEffect } from 'react';
 import Edit from './Edit';
 import { Button } from 'react-bootstrap';
+import axios from 'axios';
 
 const token = localStorage.getItem('token');
 
@@ -32,12 +33,13 @@ export default function MakeupArtist() {
 
   return (
     <div className="container">
+        <Link to={`/makeupartist/edit/${id}`}>
+            <Button variant="primary">Edit</Button>
+        </Link>
+        <hr/>
       {appointments.length > 0 && (
         <>
           <h3>Makeup Artist: {appointments[0].makeupArtist.id.name}</h3>
-          <Link to={`/makeupartist/edit/${id}`}>
-            <Button variant="primary">Edit</Button>
-          </Link>
           <hr />
         </>
       )}
