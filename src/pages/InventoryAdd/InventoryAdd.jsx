@@ -13,8 +13,14 @@ export default function InventoryAdd() {
   const navigate = useNavigate(); // Initialize the navigate object
 
   const fetchProducts = async () => {
+    const token = localStorage.getItem("token");
     try {
-      const response = await fetch(`/api/locations/getlocation/${locationId}`);
+      const response = await fetch(`/api/locations/getlocation/${locationId}`, {
+        method: "GET",
+        headers: {
+          Authorization: "Bearer " + token,
+        },
+      });
       const { newProducts } = await response.json();
       setProductList(newProducts);
       resetCheckedList(newProducts);
@@ -56,6 +62,7 @@ export default function InventoryAdd() {
   };
 
   const handleSaveChanges = async (event) => {
+    const token = localStorage.getItem("token");
     event.preventDefault(); // prevent default form submission behavior
 
     try {
@@ -80,7 +87,10 @@ export default function InventoryAdd() {
 
       const response = await fetch(`/api/locations/${locationId}`, {
         method: "POST",
-        headers: { "Content-Type": "application/json" },
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
+        },
         body: JSON.stringify({ products: productsToAdd }),
       });
 
@@ -136,8 +146,8 @@ export default function InventoryAdd() {
             <span className="input-group-text">Search</span>
             <input
               type="text"
-              className="form-control"
-              placeholder="Enter Product name, id or brand"
+              className="form-control search-input"
+              placeholder="Enter product name, id or brand"
               onChange={(e) => setSearchValue(e.target.value)}
             ></input>
           </div>
@@ -187,9 +197,9 @@ export default function InventoryAdd() {
           </tbody>
         </table>
         <div>
-          <button disabled={isSaveDisabled}>SAVE CHANGES</button>
-          <button onClick={handleReset}>CLEAR</button>
-          <button onClick={navigateBackToInventoryTable}>BACK</button>
+          <button disabled={isSaveDisabled}>Add Product(s)</button>
+          <button onClick={handleReset}>Clear</button>
+          <button onClick={navigateBackToInventoryTable}>Back</button>
         </div>
       </form>
     </div>

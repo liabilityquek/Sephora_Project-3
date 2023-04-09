@@ -19,11 +19,6 @@ export default function NavBarNew() {
           </NavLink>
         </li>
         <li className="nav-item">
-          <NavLink className="nav-link text-black nav-link-hover" to="/history">
-            Upcoming Appointment
-          </NavLink>
-        </li>
-        <li className="nav-item">
           <NavLink className="nav-link text-black nav-link-hover" to="/maps">
             Locate Us
           </NavLink>

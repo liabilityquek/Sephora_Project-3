@@ -35,6 +35,7 @@ export default function EditProductsForm({
   };
 
   const handleEdit = async () => {
+    const token = localStorage.getItem("token");
     const nameExists = products.some(
       (p) => p._id !== productID && p.name === editedProduct.name
     );
@@ -50,6 +51,7 @@ export default function EditProductsForm({
         method: "PUT",
         headers: {
           "Content-Type": "application/json",
+          Authorization: "Bearer " + token,
         },
         body: JSON.stringify(newProduct),
       });
