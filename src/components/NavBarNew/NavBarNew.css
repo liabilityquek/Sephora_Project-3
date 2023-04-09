@@ -6,4 +6,5 @@
   position: sticky;
   flex-direction: column;
   top: 56px;
+  z-index: 6;
 }

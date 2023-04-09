@@ -74,6 +74,7 @@ export default function Header({ setUser, customer }) {
               </li>
             )}
           </ul>
+          //chanv
           {isSignedIn && (
             <ul className="navbar-nav">
               {["CUSTOMER"].includes(role) && (

@@ -25,8 +25,9 @@ import { useEffect, useState } from "react";
 import { Route, Routes } from "react-router";
 import ForgetPassword from "./AuthPage/ForgetPassword";
 import SignUpForm from "./AuthPage/SignUpForm";
-import Banners from "../components/Banners";
 import LoginForm from "./AuthPage/LoginForm";
+import WithCustomerNavTools from "../components/WithCustomerBanner";
+import WithNavBar from "../components/WithNavBar";
 
 export default function App() {
   const [user, setUser] = useState(getUser());
@@ -137,14 +138,14 @@ export default function App() {
   ];
 
   const hrAdminRouteConfig = [
-    ...productsPageRoutes,
-    ...customerPagesRoutes,
+    // ...productsPageRoutes,
+    // ...customerPagesRoutes,
     //to add routes to admin pages only hr can access
   ];
 
   const opsAdminRouteConfig = [
-    ...productsPageRoutes,
-    ...customerPagesRoutes,
+    // ...productsPageRoutes,
+    // ...customerPagesRoutes,
     {
       path: "/productpage",
       element: <ProductsForm products={products} delProduct={delProduct} />,
@@ -186,8 +187,21 @@ export default function App() {
       role: "HRADMIN",
       content: (
         <Routes>
+          {customerPagesRoutes.map((config) => (
+            <Route
+              key={config.path}
+              path={config.path}
+              element={
+                <WithCustomerNavTools>{config.element}</WithCustomerNavTools>
+              }
+            />
+          ))}
           {hrAdminRouteConfig.map((config) => (
-            <Route key={config.path} {...config} />
+            <Route
+              key={config.path}
+              path={config.path}
+              element={<WithNavBar>{config.element}</WithNavBar>}
+            />
           ))}
           <Route key="*" path="*" element={accessDeniedComponent} />
         </Routes>
@@ -197,9 +211,24 @@ export default function App() {
       role: "OPSADMIN",
       content: (
         <Routes>
-          {opsAdminRouteConfig.map((config) => (
-            <Route key={config.path} {...config} />
+          {customerPagesRoutes.map((config) => (
+            <Route
+              key={config.path}
+              path={config.path}
+              element={
+                <WithCustomerNavTools>{config.element}</WithCustomerNavTools>
+              }
+            />
           ))}
+          {opsAdminRouteConfig.map((config) => {
+            return (
+              <Route
+                key={config.path}
+                path={config.path}
+                element={<WithNavBar>{config.element}</WithNavBar>}
+              />
+            );
+          })}
           <Route key="*" path="*" element={accessDeniedComponent} />
         </Routes>
       ),
@@ -209,7 +238,13 @@ export default function App() {
       content: (
         <Routes>
           {customerPagesRoutes.map((config) => (
-            <Route key={config.path} {...config} />
+            <Route
+              key={config.path}
+              path={config.path}
+              element={
+                <WithCustomerNavTools>{config.element}</WithCustomerNavTools>
+              }
+            />
           ))}
           <Route key="*" path="*" element={accessDeniedComponent} />
         </Routes>
@@ -217,44 +252,50 @@ export default function App() {
     },
   ];
 
-  const renderAuthenticatedPages = (cust) =>
-    loggedInRoleSpecificRoutes.find((config) => config.role === cust.role)
-      ?.content;
+  const renderAuthenticatedPages = (cust) => {
+    const renderLoggedInContent = loggedInRoleSpecificRoutes.find(
+      (config) => config.role === cust.role
+    )?.content;
+
+    return <React.Fragment>{renderLoggedInContent}</React.Fragment>;
+  };
 
   const renderUnauthenticatedPages = () => (
     <React.Fragment>
-      <Routes>
-        {loginRoutes.map((config) => (
-          <Route {...config} />
-        ))}
-        <Route path="/maps" element={<Map />} />
-        <Route path="/admin/*" element={<Admin />} />
-        <Route path="/makeupartist/:id/*" element={<MakeupArtist />} />
-        {productsPageRoutes.map((config) => (
-          <Route key={config.path} {...config}></Route>
-        ))}
-        {customerPagesRoutes.map((config) => (
-          <Route
-            key={config.path}
-            path={config.path}
-            element={<div>Please login</div>}
-          />
-        ))}
-        {hrAdminRouteConfig.map((config) => (
-          <Route
-            key={config.path}
-            path={config.path}
-            element={accessDeniedComponent}
-          />
-        ))}
-        {opsAdminRouteConfig.map((config) => (
-          <Route
-            key={config.path}
-            path={config.path}
-            element={accessDeniedComponent}
-          />
-        ))}
-      </Routes>
+      <WithCustomerNavTools>
+        <Routes>
+          {loginRoutes.map((config) => (
+            <Route {...config} />
+          ))}
+          <Route path="/maps" element={<Map />} />
+          <Route path="/admin/*" element={<Admin />} />
+          <Route path="/makeupartist/:id/*" element={<MakeupArtist />} />
+          {productsPageRoutes.map((config) => (
+            <Route key={config.path} {...config}></Route>
+          ))}
+          {customerPagesRoutes.map((config) => (
+            <Route
+              key={config.path}
+              path={config.path}
+              element={<div>Please login</div>}
+            />
+          ))}
+          {hrAdminRouteConfig.map((config) => (
+            <Route
+              key={config.path}
+              path={config.path}
+              element={accessDeniedComponent}
+            />
+          ))}
+          {opsAdminRouteConfig.map((config) => (
+            <Route
+              key={config.path}
+              path={config.path}
+              element={accessDeniedComponent}
+            />
+          ))}
+        </Routes>
+      </WithCustomerNavTools>
     </React.Fragment>
   );
   console.log("customer ", customer?.customer);
@@ -265,8 +306,6 @@ export default function App() {
         setUser={setUser}
         customer={customer ? customer.customer : null}
       />
-      <Banners></Banners>
-      <NavBarNew />
       {customer
         ? renderAuthenticatedPages(customer.customer)
         : renderUnauthenticatedPages()}
