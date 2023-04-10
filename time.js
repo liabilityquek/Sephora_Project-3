@@ -1,15 +1,21 @@
-import moment from 'moment';
-
 const generateTimeSlots = (start, end, intervalMins) => {
   const slots = [];
 
   for (let i = start * 60; i <= end * 60; i += intervalMins) {
+    const h = Math.floor(i / 60);
+    const m = i % 60;
 
-    const currentMoment = moment().startOf('day').add(i, 'minutes');
-    const nextMoment = currentMoment.clone().add(intervalMins, 'minutes');
-    if(nextMoment.hour() === end && nextMoment.minute() > 45) break;
+    const nextTotalMins = i + intervalMins;
+    const nextH = Math.floor(nextTotalMins / 60);
+    const nextM = nextTotalMins % 60;
 
-    slots.push(`${currentMoment.format('HH:mm')} - ${nextMoment.format('HH:mm')}`)
+    if (nextH === end && nextM > 45) break;
+
+    slots.push(
+      `${String(h).padStart(2, "0")}:${String(m).padStart(2, "0")} - ${String(
+        nextH
+      ).padStart(2, "0")}:${String(nextM).padStart(2, "0")}`
+    );
   }
 
   return slots;
