@@ -112,7 +112,7 @@ const updateProducts = async (req, res) => {
 };
 ```
 
-### Show Something
+### Show Makeup Artists by Location
 
 ```javascript
 const show = async (req, res) => {
@@ -129,7 +129,7 @@ const show = async (req, res) => {
 };
 ```
 
-### Delete Something
+### Delete Makeup Artist Profile
 
 ```javascript
 const deleteMakeupArtist = async (req, res) => {
@@ -153,9 +153,135 @@ const deleteMakeupArtist = async (req, res) => {
 };
 ```
 
+## Disabling and Removing Timeslots booked
+```js
+  const timeSlotDisabled = (startTime, futureDate, endTime, selectArtist) => {
+    console.log(`apptTiming in Times: ${JSON.stringify(apptTiming)}`);
+    const isPastTimeSlot = checkTimeSlot(startTime) && !futureDate;
+    const isMakeUpArtistWithinWorkingHours = isTimeSlotWithinWorkingHours(
+      startTime,
+      endTime,
+      selectArtist
+    );
+    const isMakeUpArtistWithinBreakHours = isTimeSlotWithinBreakTime(
+      startTime,
+      endTime,
+      selectArtist
+    );
+    const isTimeSlotBooked = apptTiming.some(
+      (appt) => appt.timeslot === `${startTime} - ${endTime}`
+    );
+    
+    return (
+      isPastTimeSlot ||
+      !isMakeUpArtistWithinWorkingHours ||
+      isMakeUpArtistWithinBreakHours ||
+      isTimeSlotBooked 
+     
+    );
+  };
+
+  const isAllTimeSlotRemoved = () => {
+    return time.every((times) => {
+      const startTime = times.split(" - ")[0];
+      const endTime = times.split(" - ")[1];
+      return timeSlotDisabled(startTime, futureDate, endTime, selectArtist);
+    });
+  };
+
+  return (
+    <div className="times">
+      {time.map((times, index) => {
+        const startTime = times.split(" - ")[0];
+        const endTime = times.split(" - ")[1];
+        //console.log(startTime)
+        const disabledTime = timeSlotDisabled(
+          startTime,
+          futureDate,
+          endTime,
+          selectArtist
+        );
+        return !disabledTime ? (
+          <div key={index}>
+            <button onClick={(e) => displayInfo(e)}>{times}</button>
+          </div>
+        ) : null;
+      })}
+      {isAllTimeSlotRemoved() && <div>No timeslot available for today</div>}
+      <div>
+        {renderBookingMessage()}
+      </div>
+    </div>
+  );
+
+```
+## Rendering the booking message
+```js
+  const renderBookingMessage = () => {
+    if (errorMessage) {
+      return errorMessage
+    } else if(!dateChanged && info && !errorMessage){
+      return `Makeup session booked on ${date.toLocaleDateString(
+        "en-UK"
+      )} for timeslot ${event}.`;
+    }
+  };
+```
+
+
 ## Key Learning
+
+## Create Makeup Artist
+ <p align="center">
+  <a href="" rel="noopener">
+ <img style="max-width: 100%;" src="/images/create makeup artist.png" alt="create-makeup-artist"></a>
+</p>
+<br>
+
+## Creating Appointments
+ <p align="center">
+  <a href="" rel="noopener">
+ <img style="max-width: 100%;" src="/images/create appointments.png" alt="create-appointments"></a>
+</p>
+<br>
+
+## View Upcoming Appointments
+ <p align="center">
+  <a href="" rel="noopener">
+ <img style="max-width: 100%;" src="/images/view upcoming appointments.png" alt="view-upcoming-appointment"></a>
+</p>
+<br>
+
+## Map
+ <p align="center">
+  <a href="" rel="noopener">
+ <img style="max-width: 100%;" src="/images/map.png" alt="map"></a>
+</p>
+<br>
+
+## View Makeup Artist by Location
+ <p align="center">
+  <a href="" rel="noopener">
+ <img style="max-width: 100%;" src="/images/view makeup artist from admin.png" alt="view-makeup-artist-by-location"></a>
+</p>
+<br>
+
+## Appointment Booking with Condition
+ <p align="center">
+  <a href="" rel="noopener">
+ <img style="max-width: 100%;" src="/images/conditional appointment booking.png" alt="appointment-booking-with-condition"></a>
+</p>
+<br>
+
+## Authenticating Routes
+ <p align="center">
+  <a href="" rel="noopener">
+ <img style="max-width: 100%;" src="/images/authorizing routes.png" alt="authenticating-routes"></a>
+</p>
+<br>
 
 ## References
 
 - https://www.sephora.sg/ (Image and Product resource)
 - https://getbootstrap.com/ (CSS)
+- https://shahabyazdi.github.io/react-multi-date-picker/min-&-max-date/ (React Calendar)

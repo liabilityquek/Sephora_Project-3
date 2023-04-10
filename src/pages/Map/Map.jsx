@@ -1,12 +1,12 @@
 import { useState, useEffect, useRef } from 'react';
 import { MapContainer, TileLayer, Marker, Popup } from 'react-leaflet';
-import { Helmet } from 'react-helmet';
 import L from 'leaflet';
 import axios from 'axios';
 import { Link } from 'react-router-dom'
 // import Location from '../../../components/location';
 import CurrentLocation from '../../components/Maps/currentLocation';
 import Distance from '../../components/Maps/Distance';
+import "./Map.css";
 
 const blackIcon = new L.Icon({
   iconUrl: 'https://cdn.rawgit.com/pointhi/leaflet-color-markers/master/img/marker-icon-2x-black.png',
@@ -115,10 +115,6 @@ const Map = () => {
 
   return (
     <div className="row">
-      <Helmet>
-        <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.3/dist/leaflet.css"
-              integrity="sha256-kLaT2GOSpHechhsozzB+flnD+zUyjE2LlfWPgU04xyI=" crossOrigin="" />
-      </Helmet>
   
       <div className="col-lg-8 offset-lg-1">
         <MapContainer ref={mapRef} center={initialPosition} zoom={initialZoom} style={{ height: '400px', width: '100%', border: '1px solid black'}}>
