@@ -46,19 +46,19 @@ const findMakeupArtistByLocation = async (req, res) => {
 };
 
 const updateMakeupArtist = async (req, res) => {
-    const { id } = req.params;
-  
-    try {
-      const makeupArtistBody = req.body;
-      const makeupArtist = await MakeupArtist.findOneAndUpdate(
-        { id: id },
-        makeupArtistBody,
-        { new: true } 
-      );
-      res.status(200).json(makeupArtistBody);
-    }  catch (error) {
-        res.status(400).json({ error: error.message });
-    }
+  const { makeupArtistId } = req.params;
+
+  try {
+    const makeupArtistBody = req.body;
+    const makeupArtist = await MakeupArtist.findOneAndUpdate(
+      { _id: makeupArtistId },
+      makeupArtistBody,
+      { new: true } 
+    );
+    res.status(200).json(makeupArtist);
+  }  catch (error) {
+      res.status(400).json({ error: error.message });
+  }
 };
 
 const findAppointmentByMakeupArtistId = async (req, res) => {
