@@ -23,6 +23,8 @@ https://sephora.cyclic.app/
 - Mongo DB (Database)
 - GitHub (version control)
 - Cyclic (Deployment)
+- Leaflet
+- Momentjs
 
 ## Screenshots of the Application
 
@@ -31,6 +33,21 @@ https://sephora.cyclic.app/
 ## Model
 
 ![model](https://github.com/beryln-t/sephora/blob/jeremy/src/assets/readmeAssets/datamodel.png?raw=true)
+
+## React routes for HR Admin
+- /makeupartist/:id/*
+- /makeupartist/edit/:id
+- /newmakeupartist
+
+## React routes for Customer
+- /maps
+- /booking
+- /history
+
+## React routes for Login
+- /login
+- /signup
+- /forgetpassword
 
 ## CRUD
 
@@ -139,7 +156,6 @@ const deleteMakeupArtist = async (req, res) => {
   try {
     await Appointment.deleteMany({ "makeupArtist.id": id });
 
-    // Find and delete the makeup artist
     const findMakeUpArtist = await MakeupArtist.findByIdAndDelete(id);
 
     if (!findMakeUpArtist) {
@@ -227,8 +243,96 @@ const deleteMakeupArtist = async (req, res) => {
     }
   };
 ```
+## Extracting Customer Name from the token
+```js
+//.......
+const token = localStorage.getItem("token")
+  const Name =  JSON.parse(window.atob(token.split(".")[1]))
+  const customerName = Name.customer.name
+  const customerEmail = Name.customer.email
+  customerInfo.name = customerName
+  customerInfo.email = customerEmail
 
+  return (
+    <>
+      <label>Name:</label>
+      <input type="text" name="name" value={customerInfo.name} onChange={handleChange} />
+      <br />
+      <label>Email:</label>
+      <input type="text" name="email" value={customerInfo.email} onChange={handleChange} />
 
+  )
+```
+
+## Authentication
+```js
+const jwt = require("jsonwebtoken");
+const Customer = require('../models/customerModel')
+
+const isAuth = async (req, res, next) => {
+const token = req.headers.authorization.replace(/"/g, '').split(' ')[1];
+console.log("token in authcontroller" ,token)
+
+if (token) {
+    try {
+      const decoded = jwt.verify(token, process.env.JWT_SECRET); 
+      const customer = await Customer.findOne({ email: decoded.customer.email }).exec();
+      if (customer) {
+        req.customer = decoded.customer;
+        next();
+      } else {
+        res.status(403).send("Forbidden");
+      }
+    } catch (error) {
+      res.status(401).send("Invalid token");
+    //   console.log(error)
+    }
+  } else {
+    res.status(401).send("Unauthorized");
+  }
+};
+
+```
+## Showing Street View Map
+```js
+    function handleShowStreetView(location) {
+      const radius = 50
+      setStreetViewImageUrl(null)
+      getStreetViewImageUrl(Number(location.latitude), Number(location.longitude), radius);
+    }
+
+```
+## Getting Street View Image
+```js
+  function getStreetViewImageUrl(lat, lng, radius) {
+ 
+    const radiusParam = radius ? `&radius=${radius}` : '';
+    const adjustedLat = lat + (Math.random() * radius * 2 - radius) * 0.0001;
+    const adjustedLng = lng + (Math.random() * radius * 2 - radius) * 0.0001;
+    const baseUrl = 'https://maps.googleapis.com/maps/api/streetview';
+    const size = '300x200'; 
+    const heading = '210'; 
+    const pitch = '10'; 
+
+    const location = new window.google.maps.LatLng(adjustedLat, adjustedLng);
+    const streetViewService = new window.google.maps.StreetViewService();
+    const apiKey = 'AIzaSyDDDJIzJGH2EKzuO21LzTsg6Hxiyq04Tc4';
+
+    streetViewService.getPanorama({ location, radius }, (data, status) => {
+      if (status === window.google.maps.StreetViewStatus.OK) {
+        // Use the panorama ID to construct the street view image URL
+        const panoId = data.location.pano;
+        const imageUrl = `${baseUrl}?size=${size}&pano=${panoId}&key=${apiKey}`;
+        setStreetViewImageUrl(imageUrl);
+      } else {
+        console.log(`No street view available for location: ${location}`);
+        const imageUrl = `${baseUrl}?size=${size}&location=${adjustedLat},${adjustedLng}&heading=${heading}&pitch=${pitch}&key=${apiKey}${radiusParam}`;
+        setStreetViewImageUrl(imageUrl);
+  
+        }
+    })}
+
+```
 ## Key Learning
 
 ## Create Makeup Artist
@@ -285,3 +389,4 @@ const deleteMakeupArtist = async (req, res) => {
 - https://www.sephora.sg/ (Image and Product resource)
 - https://getbootstrap.com/ (CSS)
 - https://shahabyazdi.github.io/react-multi-date-picker/min-&-max-date/ (React Calendar)
+- https://momentjscom.readthedocs.io/en/latest/moment (Momentjs Documentation)
