@@ -54,11 +54,13 @@ export default function Admin() {
   };
 
   const handleDelete = async (id) => {
+    const adminToken = localStorage.getItem("token");
+    
     try {
       const response = await axios.delete(`/api/makeupartist/${id}`, {
         headers: {
           "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer ${adminToken}`,
         },
       });
       if (response.status === 200) {
