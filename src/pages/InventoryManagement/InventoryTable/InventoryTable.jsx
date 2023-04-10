@@ -162,6 +162,7 @@ export default function () {
 
   return (
     <div className="inventoryTable">
+      <h3 className="inventoryTablePageTitle">Inventory Management</h3>
       {locationsData && locationsData.length ? (
         <div className="content">
           <div className="filterHeader">
@@ -196,7 +197,7 @@ export default function () {
                     ></input>
                   </div>
                   <button
-                    className="btn btn-primary wd-300"
+                    className="btn btn-dark wd-300"
                     onClick={redirectAddPage}
                   >
                     Add Product
@@ -204,7 +205,7 @@ export default function () {
                 </div>
                 <table className="table">
                   <thead>
-                    <tr>
+                    <tr className="inventoryTableHeader">
                       <th scope="col">Product Name</th>
                       <th scope="col">Product Id</th>
                       <th scope="col">Product Brand</th>

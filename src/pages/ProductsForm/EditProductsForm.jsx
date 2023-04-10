@@ -17,7 +17,7 @@ export default function EditProductsForm({
     product
       ? {
           name: product.name,
-          price: product.price,
+          price: product.price / CONVERTTODOLLAR,
           category: product.category,
           brand: product.brand,
           imgurl: product.imgurl,
@@ -45,7 +45,7 @@ export default function EditProductsForm({
     } else {
       const newProduct = {
         ...editedProduct,
-        price: product.price * CONVERTTODOLLAR,
+        price: editedProduct.price * CONVERTTODOLLAR, // divide price by 100 to convert it back to dollars
       };
       const response = await fetch(`/api/AdminProduct/${productID}/edit`, {
         method: "PUT",
@@ -84,7 +84,7 @@ export default function EditProductsForm({
         </div>
         <div>
           <label className="form-label" htmlFor="price">
-            Price (In cents)
+            Price
           </label>
           <input
             type="number"
