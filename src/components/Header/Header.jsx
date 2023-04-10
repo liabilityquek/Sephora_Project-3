@@ -4,10 +4,7 @@ import "./Header.css";
 import { logout } from "../../utilities/users-service";
 
 export default function Header({ setUser, customer }) {
-  const isSignedIn = customer; // Replace with your logic for checking if the user is signed in
-  // const token = localStorage.getItem("token");
-  // const Name = token ? JSON.parse(window.atob(token.split(".")[1])) : null;
-  // const customerName = Name && Name.customer.name ? Name.customer.name : "";
+  const isSignedIn = customer;
   const navigate = useNavigate();
   const location = useLocation();
   const { role } = customer || {};
@@ -74,7 +71,7 @@ export default function Header({ setUser, customer }) {
               </li>
             )}
           </ul>
-          //chanv
+
           {isSignedIn && (
             <ul className="navbar-nav">
               {["CUSTOMER"].includes(role) && (
