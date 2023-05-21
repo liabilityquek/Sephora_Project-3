@@ -16,8 +16,8 @@ https://sephora.cyclic.app/
 
 - React
 - JavaScript
-- CSS + Bootstrap
-- Mongoose & Express
+- Bootstrap
+- Express
 - Bcrypt (Hashing)
 - JWT (Authentication)
 - Mongo DB (Database)
@@ -28,7 +28,8 @@ https://sephora.cyclic.app/
 
 ## Screenshots of the Application
 
----
+<a href="" rel="noopener">
+ <img style="max-width: 100%;" src="/images/sephora.png" alt="sephora"></a>
 
 ## Model
 
